@@ -1,0 +1,54 @@
+**/.clover/
+**/.settings/
+
+.mule
+.metadata
+
+.DS_Store
+*.swp
+
+**/bin/
+target/
+
+#IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+
+#kdiff
+*.orig
+
+#Eclipse
+.project
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# CDT-specific
+.cproject
+
+# PDT-specific
+.buildpath
+
+#properties in test
+#src/test/resources/env.properties
+#src/test/resources/braintree.properties
+#There is more at https://github.com/github/gitignore/tree/master/Global
+
+#Don't check in python bytecode
+*.pyc
