@@ -6,9 +6,9 @@ import com.dibs.graphql.parser.data.GraphQLToken;
 public class GraphQLNodeFactory {
 
 	public static GraphQLNode fromToken(GraphQLToken token) {
-		GraphQLNode node = new GraphQLNode();
-		node.setValue(token.getValue());
-		node.setAttributes(token.getAttributes());
+		GraphQLNode node = new GraphQLNode()
+			.value(token.getValue())
+			.attributes(token.getAttributes());
 		
 		return node;
 	}

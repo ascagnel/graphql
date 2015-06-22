@@ -13,6 +13,7 @@ import org.apache.commons.logging.LogFactory;
 import com.dibs.graphql.parser.data.GraphQLToken;
 import com.dibs.graphql.parser.data.GraphQLTokenType;
 import com.dibs.graphql.reader.GraphQLTokenReader;
+import com.dibs.graphql.reader.impl.ReaderUtil.Token;
 
 public class InputStreamGraphQLTokenReader implements GraphQLTokenReader {
 	private static final Log LOG = LogFactory.getLog(InputStreamGraphQLTokenReader.class);
@@ -37,86 +38,89 @@ public class InputStreamGraphQLTokenReader implements GraphQLTokenReader {
 	
 	private Map<String, String> parseAttributes(Reader reader) throws IOException {
 		Map<String, String> attributes = new HashMap<>();
-
-		char[] buffer = new char[1024];
-
-		int nextCharInt;
 		
 		String attributeKey = null;
-		int bufferIndex = 0;
+		Token token = ReaderUtil.readUntilToken(reader);
 		
-		while((nextCharInt = reader.read()) != -1) {
-			char nextChar = (char) nextCharInt;
-			
-			GraphQLTokenType tokenType = GraphQLTokenType.fromValue(nextChar);
-			
-			if (tokenType != null) {
-				if (isAttributeKeyTerminator(tokenType)) {
-					attributeKey = nullIfEmpty(new String(buffer));
-					buffer = new char[1024];
-				} else if (isAttributeValueTerminator(tokenType)) {
-					String attributeValue = nullIfEmpty(new String(buffer));
-					attributes.put(attributeKey, attributeValue);
-				}			
-				
-				if (tokenType == GraphQLTokenType.ATTRIBUTE_END) {
-					break;
-				}
-			} else {
-				buffer[bufferIndex] = nextChar;
-				bufferIndex++;
+		// Loop on attributes
+		while (!isAttributeTerminator(token)) {
+			if (isAttributeKeyTerminator(token)) {
+				attributeKey = nullIfEmpty(new String(token.getValue()));
+			} else if (isAttributeValueTerminator(token)) {
+				String attributeValue = nullIfEmpty(new String(token.getValue()));
+				attributes.put(attributeKey, attributeValue);
 			}
+			
+			token = ReaderUtil.readUntilToken(reader);
 		}
+		
+		String attributeValue = nullIfEmpty(new String(token.getValue()));
+		attributes.put(attributeKey, attributeValue);
 		
 		return attributes;
 	}
 	
-	private boolean isAttributeKeyTerminator(GraphQLTokenType tokenType) {
+	private boolean isAttributeStart(Token token) {
+		GraphQLTokenType tokenType = token.getType();
+		
+		return tokenType == GraphQLTokenType.ATTRIBUTE_START;
+	}
+	
+	private boolean isAttributeKeyTerminator(Token token) {
+		GraphQLTokenType tokenType = token.getType();
 		return tokenType == GraphQLTokenType.ATTRIBUTE_DELIM;
 	}
 	
-	private boolean isAttributeValueTerminator(GraphQLTokenType tokenType) {
+	private boolean isAttributeValueTerminator(Token token) {
+		GraphQLTokenType tokenType = token.getType();
+
 		return tokenType == GraphQLTokenType.OBJECT_DELIM 
 						|| tokenType ==  GraphQLTokenType.ATTRIBUTE_END;
 	}
-	private boolean isTokenValueTerminator(GraphQLTokenType tokenType) {
+	
+	private boolean isTokenValueTerminator(Token token) {
+		GraphQLTokenType tokenType = token.getType();
+
 		return tokenType == GraphQLTokenType.ATTRIBUTE_START 
 						|| tokenType == GraphQLTokenType.OBJECT_DELIM 
 						|| tokenType == GraphQLTokenType.OBJECT_END;
 	}
 	
-	public GraphQLToken next() throws IOException {
-		char[] valueBuffer = new char[1024];
+	private boolean isTokenTerminator(Token token) {
+		GraphQLTokenType tokenType = token.getType();
 
-		int bufferIndex = 0;
-		int intChar;
+		return tokenType == GraphQLTokenType.OBJECT_START 
+						|| tokenType == GraphQLTokenType.OBJECT_DELIM 
+						|| tokenType == GraphQLTokenType.OBJECT_END;
+	}
+	
+	private boolean isAttributeTerminator(Token token) {
+		GraphQLTokenType tokenType = token.getType();
+
+		return tokenType == GraphQLTokenType.ATTRIBUTE_END;
+	}
+	
+	public GraphQLToken next() throws IOException {
+		GraphQLToken graphQltoken = new GraphQLToken();
+
+		Token token = ReaderUtil.readUntilToken(reader);
 		
-		GraphQLToken token = new GraphQLToken();
-		
-		while((intChar = reader.read()) != -1) {
-			char curChar = (char) intChar;
-			
-			GraphQLTokenType tokenType = GraphQLTokenType.fromValue(curChar);
-			
-			if (tokenType != null) {
-				token.setTokenType(tokenType);
-				
-				if (isTokenValueTerminator(tokenType)) {
-					token.setValue(nullIfEmpty(new String(valueBuffer)));
-				}
-				
-				if (tokenType == GraphQLTokenType.ATTRIBUTE_START) {
-					token.setAttributes(parseAttributes(reader));
-				} else {
-					break;
-				}
-			} else {
-				valueBuffer[bufferIndex] = curChar;
-				bufferIndex++;
+		// Token value (property name) is going to be the first value that comes back if it exists
+		String graphQLTokenValue = nullIfEmpty(new String(token.getValue()));
+
+		// Loop to see if there are additional tokens, such as attributes or filters
+		while (!isTokenTerminator(token)) {
+			if (isAttributeStart(token)) {
+				graphQltoken.setAttributes(parseAttributes(reader));
 			}
+			
+			token = ReaderUtil.readUntilToken(reader);
 		}
 		
-		return token;
+		graphQltoken.setValue(graphQLTokenValue);
+		graphQltoken.setTokenType(token.getType());
+		
+		return graphQltoken;
 	}
 	
 	public void close() throws IOException {

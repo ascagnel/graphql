@@ -45,7 +45,7 @@ public class GraphQLParser {
 			// about adding tokens that are only "}" as a child
 			if (!nodes.isEmpty() && token.getValue() != null) {
 				GraphQLNode prevNode = nodes.peek();
-				prevNode.addChild(node);
+				prevNode.child(node);
 			}
 			
 			if (token.getTokenType() == GraphQLTokenType.OBJECT_START) {
