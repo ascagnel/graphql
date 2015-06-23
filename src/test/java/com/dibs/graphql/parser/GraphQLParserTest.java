@@ -7,7 +7,8 @@ import java.io.ByteArrayInputStream;
 
 import org.junit.Test;
 
-import com.dibs.graphql.parser.data.GraphQLNode;
+import com.dibs.graphql.data.Query;
+import com.dibs.graphql.data.QueryBuilder;
 
 public class GraphQLParserTest {
 	
@@ -26,38 +27,40 @@ public class GraphQLParserTest {
 					"  }\n" + 
 					"}";
 
-	private GraphQLNode userNode = 
-			new GraphQLNode()
-				.child(
-					new GraphQLNode()
-						.value("user")
-						.attribute("id", "123")
-						.child(new GraphQLNode().value("id"))
-						.child(new GraphQLNode().value("name"))
-						.child(new GraphQLNode().value("isViewerFriend"))
-						.child(
-							new GraphQLNode()
-								.value("profilePicture")
-								.attribute("width", "50px")
-								.child(new GraphQLNode().value("uri"))
-								.child(new GraphQLNode().value("width"))
-								.child(new GraphQLNode().value("height")))
-						.child(
-							new GraphQLNode()
-								.value("test")
-								.child(new GraphQLNode().value("123"))
+	private Query userNode = 
+			new QueryBuilder()
+				.subQuery(
+					new QueryBuilder()
+						.name("user")
+						.param("id", "123")
+						.subQuery(new QueryBuilder().name("id").build())
+						.subQuery(new QueryBuilder().name("name").build())
+						.subQuery(new QueryBuilder().name("isViewerFriend").build())
+						.subQuery(
+							new QueryBuilder()
+								.name("profilePicture")
+								.param("width", "50px")
+								.subQuery(new QueryBuilder().name("uri").build())
+								.subQuery(new QueryBuilder().name("width").build())
+								.subQuery(new QueryBuilder().name("height").build())
+							.build())
+						.subQuery(
+							new QueryBuilder()
+								.name("test")
+								.subQuery(new QueryBuilder().name("123").build()).build()
 						)
-				);
+					.build()
+				).build();
 						
 	
 	@Test
 	public void test() throws Exception {
-		GraphQLParser parser = new GraphQLParser();
-		GraphQLNode rootNode = parser.parse(new ByteArrayInputStream(userString.getBytes()));
+		QueryParser parser = new QueryParser();
+		Query rootNode = parser.parse(new ByteArrayInputStream(userString.getBytes()));
 		
 		assertNotNull(rootNode);
-		assertEquals(1, rootNode.getChildren().size());
-		assertEquals("user", rootNode.getChildren().get(0).getValue());
+		assertEquals(1, rootNode.getSubQueries().size());
+		assertEquals("user", rootNode.getSubQueries().get(0).getName());
 		assertEquals(userNode, rootNode);
 	}
 }

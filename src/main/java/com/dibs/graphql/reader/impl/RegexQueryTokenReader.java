@@ -1,4 +1,4 @@
-package com.dibs.graphql.parser;
+package com.dibs.graphql.reader.impl;
 
 import java.io.Closeable;
 import java.io.InputStream;
@@ -11,11 +11,11 @@ import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.dibs.graphql.parser.data.GraphQLToken;
-import com.dibs.graphql.parser.data.GraphQLTokenType;
+import com.dibs.graphql.data.parse.QueryToken;
+import com.dibs.graphql.data.parse.TokenType;
 
-public class GraphQLTokenInputStreamReader implements Closeable {
-	private static final Log LOG = LogFactory.getLog(GraphQLTokenInputStreamReader.class);
+public class RegexQueryTokenReader implements Closeable {
+	private static final Log LOG = LogFactory.getLog(RegexQueryTokenReader.class);
 	
 	private static final int TOKEN_VALUE_GROUP = 1;
 	private static final int OBJECT_ARG_GROUP = 3;
@@ -48,7 +48,7 @@ public class GraphQLTokenInputStreamReader implements Closeable {
 	
 	private Scanner scanner;
 	
-	public GraphQLTokenInputStreamReader(InputStream inputStream) {
+	public RegexQueryTokenReader(InputStream inputStream) {
 		init(inputStream);
 	}
 	
@@ -60,7 +60,7 @@ public class GraphQLTokenInputStreamReader implements Closeable {
 		return scanner.hasNext();
 	}
 	
-	public GraphQLToken nextToken() {
+	public QueryToken nextToken() {
 		String fullTokenMatch = scanner.findWithinHorizon(NEXT_TOKEN_PATTERN, 0);
 		
 		if (LOG.isDebugEnabled()) {
@@ -71,7 +71,7 @@ public class GraphQLTokenInputStreamReader implements Closeable {
 		String tokenType = nullIfEmpty(scanner.match().group(OBJECT_ARG_GROUP));
 		String attributes = nullIfEmpty(scanner.match().group(ATTRIBUTE_GROUP));
 		
-		GraphQLToken token = new GraphQLToken();
+		QueryToken token = new QueryToken();
 		token.setValue(tokenValue);
 		token.setFullTokenValue(fullTokenMatch);
 		
@@ -80,7 +80,7 @@ public class GraphQLTokenInputStreamReader implements Closeable {
 		}
 		
 		if (tokenType != null) {
-			token.setTokenType(GraphQLTokenType.fromValue(null));
+			token.setTokenType(TokenType.fromValue(null));
 		}
 		
 		return token;

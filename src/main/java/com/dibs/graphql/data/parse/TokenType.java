@@ -1,10 +1,10 @@
-package com.dibs.graphql.parser.data;
+package com.dibs.graphql.data.parse;
 
 import java.util.HashMap;
 import java.util.Map;
 
 
-public enum GraphQLTokenType {
+public enum TokenType {
 	
 	OBJECT_START('{'),
 	OBJECT_END('}'),
@@ -14,20 +14,20 @@ public enum GraphQLTokenType {
 	ATTRIBUTE_DELIM(':');
 
 	private Character value;
-	private static Map<Character, GraphQLTokenType> typesByValue;
+	private static Map<Character, TokenType> typesByValue;
 	
 	static {
 		typesByValue = new HashMap<>();
 		
-		for (GraphQLTokenType tokenType : GraphQLTokenType.values()) {
+		for (TokenType tokenType : TokenType.values()) {
 			typesByValue.put(tokenType.value, tokenType);
 		}
 	}
-	private GraphQLTokenType(Character value) {
+	private TokenType(Character value) {
 		this.value = value;
 	}
 	
-	public static GraphQLTokenType fromValue(Character value) {
+	public static TokenType fromValue(Character value) {
 		return typesByValue.get(value);
 	}
 }
