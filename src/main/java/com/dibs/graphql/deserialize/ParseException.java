@@ -1,8 +1,6 @@
-package com.dibs.graphql.deserialize;
+package com.dibs.graphql.parser;
 
 public class ParseException extends Exception {
-
-	private static final long serialVersionUID = 1L;
 
 	public ParseException(Throwable t) {
 		super(t);

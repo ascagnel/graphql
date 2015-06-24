@@ -1,4 +1,4 @@
-package com.dibs.graphql.parser.data;
+package com.dibs.graphql.data.parse;
 
 
 public class TokenData {

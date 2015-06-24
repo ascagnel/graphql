@@ -1,23 +1,25 @@
-package com.dibs.graphql.deserialize.parser;
+package com.dibs.graphql.parser.reader;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.dibs.graphql.parser.data.TokenData;
-import com.dibs.graphql.parser.data.TokenType;
+import com.dibs.graphql.data.parse.TokenData;
+import com.dibs.graphql.data.parse.TokenType;
 
-public class StreamUtil {
-	private static final Log LOG = LogFactory.getLog(StreamUtil.class);
+public class ReaderUtil {
+	private static final Log LOG = LogFactory.getLog(ReaderUtil.class);
 	
 	private static final int DEFAULT_BUFFER_SIZE = 256;
 	
 	private static int bufferSize = DEFAULT_BUFFER_SIZE;
 	
 	public static void setBufferSize(int bufferSize) {
-		StreamUtil.bufferSize = bufferSize;
+		ReaderUtil.bufferSize = bufferSize;
 	}
 
 	public static TokenData readUntilToken(Reader reader) throws IOException {
@@ -58,6 +60,23 @@ public class StreamUtil {
 		
 		buffer[index] = charToAppend;
 		return buffer;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> Set<T> newHashSet(T... objs) {
+	    Set<T> set = new HashSet<>();
+	    
+	    for (T obj : objs) {
+	        set.add(obj);
+	    }
+	    
+	    return set;
+	}
+	
+	public static <D> void assertContains(Set<D> expected, D actual) {
+		if (!expected.contains(actual)) {
+			throw new RuntimeException("Invalid value [" + actual +"]. Expected one of: " + expected);
+		}
 	}
 
 	public static String nullIfEmpty(String input) {

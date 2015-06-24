@@ -11,8 +11,8 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 
 import com.dibs.graphql.data.Query;
-import com.dibs.graphql.parser.ParseException;
-import com.dibs.graphql.parser.QueryParser;
+import com.dibs.graphql.deserialize.ParseException;
+import com.dibs.graphql.deserialize.QueryDeserializer;
 import com.dibs.graphql.serialize.QuerySerializer;
 
 public class GraphQLMessageConverter extends AbstractHttpMessageConverter<Query> {
@@ -27,7 +27,7 @@ public class GraphQLMessageConverter extends AbstractHttpMessageConverter<Query>
 	@Override
 	protected Query readInternal(Class<? extends Query> arg0, HttpInputMessage arg1) throws IOException, HttpMessageNotReadableException {
 		InputStream body = arg1.getBody();
-		QueryParser parser = new QueryParser();
+		QueryDeserializer parser = new QueryDeserializer();
 		
 		try {
 			return parser.parse(body);		

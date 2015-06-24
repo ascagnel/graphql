@@ -10,7 +10,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.dibs.graphql.data.Query;
-import com.dibs.graphql.data.parse.TokenType;
+import com.dibs.graphql.parser.data.TokenType;
 
 public class QuerySerializer {
 	private static final Log LOG = LogFactory.getLog(QuerySerializer.class);
@@ -32,34 +32,32 @@ public class QuerySerializer {
 	}
 	
 	private void writeAttributes(OutputStream stream, Query query, boolean isPrettyPrint) throws IOException {
-		if (query.getParams() != null) {
-			if (isPrettyPrint) {
-				stream.write(SPACE);
-			}
-			
-			ArrayList<Map.Entry<String, String>> attributes = new ArrayList<>(query.getParams().entrySet());
-			
-			int attributeSize = attributes.size();
-			
-			stream.write(TokenType.ATTRIBUTE_START.getValue());
-			
-			for (int i = 0; i < attributeSize; i++) {
-				boolean isLastAttribute = (i == (attributeSize - 1));
-				
-				Map.Entry<String, String> attribute = attributes.get(i);
-				
-				stream.write(attribute.getKey().getBytes());
-				stream.write(TokenType.ATTRIBUTE_DELIM.getValue());
-				stream.write(attribute.getValue().getBytes());
-				
-				if (!isLastAttribute) {
-					stream.write(TokenType.OBJECT_DELIM.getValue());
-				}
-				
-			}
-			
-			stream.write(TokenType.ATTRIBUTE_END.getValue());
+		if (isPrettyPrint) {
+			stream.write(SPACE);
 		}
+		
+		ArrayList<Map.Entry<String, String>> attributes = new ArrayList<>(query.getParams().entrySet());
+				
+		stream.write(TokenType.ATTRIBUTE_START.getValue());
+		
+		int attributeSize = attributes.size();
+
+		for (int i = 0; i < attributeSize; i++) {
+			boolean isLastAttribute = (i == (attributeSize - 1));
+			
+			Map.Entry<String, String> attribute = attributes.get(i);
+			
+			stream.write(attribute.getKey().getBytes());
+			stream.write(TokenType.ATTRIBUTE_DELIM.getValue());
+			stream.write(attribute.getValue().getBytes());
+			
+			if (!isLastAttribute) {
+				stream.write(TokenType.OBJECT_DELIM.getValue());
+			}
+			
+		}
+		
+		stream.write(TokenType.ATTRIBUTE_END.getValue());
 	}
 	
 	private void writeQuery(OutputStream stream, Query query, int depth, boolean isPrettyPrint, boolean isLastChild) throws IOException {	
@@ -70,10 +68,11 @@ public class QuerySerializer {
 		
 		if (query.getName() != null) {
 			stream.write(query.getName().getBytes());
-			
-			writeAttributes(stream, query, isPrettyPrint);
 		}
 		
+		if (query.getParams() != null) {
+			writeAttributes(stream, query, isPrettyPrint);
+		}
 		
 		List<Query> subQueries = query.getSubQueries();
 		

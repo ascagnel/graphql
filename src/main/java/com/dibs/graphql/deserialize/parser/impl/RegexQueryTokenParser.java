@@ -1,4 +1,4 @@
-package com.dibs.graphql.deserialize.parser.impl;
+package com.dibs.graphql.parser.reader.impl;
 
 import java.io.Closeable;
 import java.io.InputStream;
@@ -11,11 +11,11 @@ import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.dibs.graphql.parser.data.QueryToken;
-import com.dibs.graphql.parser.data.TokenType;
+import com.dibs.graphql.data.parse.QueryToken;
+import com.dibs.graphql.data.parse.TokenType;
 
-public class RegexQueryTokenParser implements Closeable {
-	private static final Log LOG = LogFactory.getLog(RegexQueryTokenParser.class);
+public class RegexQueryTokenReader implements Closeable {
+	private static final Log LOG = LogFactory.getLog(RegexQueryTokenReader.class);
 	
 	private static final int TOKEN_VALUE_GROUP = 1;
 	private static final int OBJECT_ARG_GROUP = 3;
@@ -48,7 +48,7 @@ public class RegexQueryTokenParser implements Closeable {
 	
 	private Scanner scanner;
 	
-	public RegexQueryTokenParser(InputStream inputStream) {
+	public RegexQueryTokenReader(InputStream inputStream) {
 		init(inputStream);
 	}
 	

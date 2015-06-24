@@ -1,4 +1,4 @@
-package com.dibs.graphql.deserialize;
+package com.dibs.graphql.parser;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,19 +11,19 @@ import org.apache.commons.logging.LogFactory;
 
 import com.dibs.graphql.data.Query;
 import com.dibs.graphql.data.QueryBuilder;
-import com.dibs.graphql.deserialize.parser.QueryTokenParser;
-import com.dibs.graphql.deserialize.parser.impl.StreamingQueryTokenParser;
-import com.dibs.graphql.parser.data.QueryToken;
-import com.dibs.graphql.parser.data.TokenType;
+import com.dibs.graphql.data.parse.QueryToken;
+import com.dibs.graphql.data.parse.TokenType;
+import com.dibs.graphql.parser.reader.QueryTokenReader;
+import com.dibs.graphql.parser.reader.impl.StreamingQueryTokenReader;
 
-public class QueryDeserializer {
-	private static final Log LOG = LogFactory.getLog(QueryDeserializer.class);
+public class QueryParser {
+	private static final Log LOG = LogFactory.getLog(QueryParser.class);
 	
 	private Stack<Query> nodes;
 	
-	private QueryTokenParser tokenReader;
+	private QueryTokenReader tokenReader;
 	
-	public QueryDeserializer() {
+	public QueryParser() {
 	}
 	
 	public Query parse(InputStream inputStream) throws ParseException {
@@ -36,7 +36,7 @@ public class QueryDeserializer {
 		Query rootNode = null;
 		
 		try {
-			tokenReader = new StreamingQueryTokenParser(inputStream);
+			tokenReader = new StreamingQueryTokenReader(inputStream);
 			
 			while (tokenReader.hasNext()) {
 				QueryToken token = tokenReader.next();
