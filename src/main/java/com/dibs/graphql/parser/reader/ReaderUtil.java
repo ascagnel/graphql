@@ -1,4 +1,4 @@
-package com.dibs.graphql.reader;
+package com.dibs.graphql.parser.reader;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -14,10 +14,18 @@ import com.dibs.graphql.data.parse.TokenType;
 public class ReaderUtil {
 	private static final Log LOG = LogFactory.getLog(ReaderUtil.class);
 	
+	private static final int DEFAULT_BUFFER_SIZE = 256;
+	
+	private static int bufferSize = DEFAULT_BUFFER_SIZE;
+	
+	public static void setBufferSize(int bufferSize) {
+		ReaderUtil.bufferSize = bufferSize;
+	}
+
 	public static TokenData readUntilToken(Reader reader) throws IOException {
 		int nextInt;
 		
-		char[] buffer = new char[256];
+		char[] buffer = new char[bufferSize];
 		int index = 0;
 		
 		TokenType tokenType = null;
@@ -54,11 +62,14 @@ public class ReaderUtil {
 		return buffer;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static <T> Set<T> newHashSet(T... objs) {
-	    Set<T> set = new HashSet<T>();
-	    for (T o : objs) {
-	        set.add(o);
+	    Set<T> set = new HashSet<>();
+	    
+	    for (T obj : objs) {
+	        set.add(obj);
 	    }
+	    
 	    return set;
 	}
 	

@@ -1,4 +1,4 @@
-package com.dibs.graphql.reader.impl;
+package com.dibs.graphql.parser.reader.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,9 +12,9 @@ import org.apache.commons.logging.LogFactory;
 
 import com.dibs.graphql.data.parse.QueryToken;
 import com.dibs.graphql.data.parse.TokenData;
-import com.dibs.graphql.reader.QueryTokenReader;
-import com.dibs.graphql.reader.ReaderUtil;
-import com.dibs.graphql.reader.TokenUtil;
+import com.dibs.graphql.parser.reader.QueryTokenReader;
+import com.dibs.graphql.parser.reader.ReaderUtil;
+import com.dibs.graphql.parser.reader.TokenUtil;
 
 public class StreamingQueryTokenReader implements QueryTokenReader {
 	private static final Log LOG = LogFactory.getLog(StreamingQueryTokenReader.class);

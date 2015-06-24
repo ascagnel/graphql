@@ -1,4 +1,4 @@
-package com.dibs.graphql.reader.impl;
+package com.dibs.graphql.parser.reader.impl;
 
 import java.io.Closeable;
 import java.io.InputStream;

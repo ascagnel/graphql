@@ -27,6 +27,10 @@ public enum TokenType {
 		this.value = value;
 	}
 	
+	public Character getValue() {
+		return value;
+	}
+	
 	public static TokenType fromValue(Character value) {
 		return typesByValue.get(value);
 	}

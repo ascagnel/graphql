@@ -1,4 +1,4 @@
-package com.dibs.graphql.reader;
+package com.dibs.graphql.parser.reader;
 
 import java.util.Set;
 

@@ -4,13 +4,18 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 import org.junit.Test;
 
 import com.dibs.graphql.data.Query;
 import com.dibs.graphql.data.QueryBuilder;
+import com.dibs.graphql.serialize.QuerySerializer;
 
 public class GraphQLParserTest {
+	
+	private static final String SERIALIZED_USER = "{user(id:123){id,name,isViewerFriend,profilePicture(width:50px){uri,width,height},test{123}}}";
 	
 	private String userString = "{\n" + 
 					"  user (id: 123) {\n" + 
@@ -62,5 +67,18 @@ public class GraphQLParserTest {
 		assertEquals(1, rootNode.getSubQueries().size());
 		assertEquals("user", rootNode.getSubQueries().get(0).getName());
 		assertEquals(userNode, rootNode);
+	}
+	
+	@Test
+	public void testWrite() throws IOException {
+		Query rootQuery = userNode;
+		
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		
+		QuerySerializer serializer = new QuerySerializer();
+		serializer.serialize(outputStream, rootQuery);
+		
+		String outputString = outputStream.toString();
+		assertEquals(SERIALIZED_USER, outputString);
 	}
 }
