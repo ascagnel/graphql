@@ -44,6 +44,6 @@ public class GraphQLMessageConverter extends AbstractHttpMessageConverter<Query>
 	@Override
 	protected void writeInternal(Query arg0, HttpOutputMessage arg1) throws IOException, HttpMessageNotWritableException {	
 		QuerySerializer querySerializer = new QuerySerializer();
-		querySerializer.serialize(arg1.getBody(), arg0);
+		querySerializer.serialize(arg1.getBody(), arg0, false);
 	}
 }

@@ -15,7 +15,24 @@ import com.dibs.graphql.serialize.QuerySerializer;
 
 public class GraphQLParserTest {
 	
-	private static final String SERIALIZED_USER = "{user(id:123){id,name,isViewerFriend,profilePicture(width:50px){uri,width,height},test{123}}}";
+	private static final String NON_PRETTY_SERIALIZED_USER = "{user(id:123){id,name,isViewerFriend,profilePicture(width:50px){uri,width,height},test{123}}}";
+	
+	private static final String PRETTY_SERIALIZED_USER = 
+					"{\n" + 
+					"	user (id:123) {\n" + 
+					"		id,\n" + 
+					"		name,\n" + 
+					"		isViewerFriend,\n" + 
+					"		profilePicture (width:50px) {\n" + 
+					"			uri,\n" + 
+					"			width,\n" + 
+					"			height\n" + 
+					"		},\n" + 
+					"		test {\n" + 
+					"			123\n" + 
+					"		}\n" + 
+					"	}\n" + 
+					"}\n";
 	
 	private String userString = "{\n" + 
 					"  user (id: 123) {\n" + 
@@ -76,9 +93,16 @@ public class GraphQLParserTest {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		
 		QuerySerializer serializer = new QuerySerializer();
-		serializer.serialize(outputStream, rootQuery);
+		serializer.serialize(outputStream, rootQuery, false);
 		
-		String outputString = outputStream.toString();
-		assertEquals(SERIALIZED_USER, outputString);
+		String nonPrettyOutputString = outputStream.toString();
+		assertEquals(NON_PRETTY_SERIALIZED_USER, nonPrettyOutputString);
+		
+		outputStream = new ByteArrayOutputStream();
+
+		serializer.serialize(outputStream, rootQuery, true);
+		
+		String prettyOutputString = outputStream.toString();
+		assertEquals(PRETTY_SERIALIZED_USER, prettyOutputString);
 	}
 }
