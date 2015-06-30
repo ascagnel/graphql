@@ -9,14 +9,14 @@ import org.junit.Test;
 
 import com.dibs.graphql.data.Query;
 import com.dibs.graphql.data.QueryTestUtil;
+import com.dibs.graphql.deserialize.impl.QueryDeserializerStackImpl;
 
 public class DeserializationTest {
-
 	
 	@Test
 	public void test() throws Exception {
-		QueryDeserializer parser = new QueryDeserializer();
-		Query rootNode = parser.parse(new ByteArrayInputStream(QueryTestUtil.getUserString().getBytes()));
+		QueryDeserializer parser = new QueryDeserializerStackImpl();
+		Query rootNode = parser.deserialize(new ByteArrayInputStream(QueryTestUtil.getUserString().getBytes()));
 		
 		assertNotNull(rootNode);
 		assertEquals(1, rootNode.getSubQueries().size());

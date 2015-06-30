@@ -3,13 +3,13 @@ package com.dibs.graphql.serialize;
 import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 import org.junit.Test;
 
 import com.dibs.graphql.data.Query;
 import com.dibs.graphql.data.QueryTestUtil;
-import com.dibs.graphql.serialize.QuerySerializer;
+import com.dibs.graphql.deserialize.SerializationException;
+import com.dibs.graphql.serialize.impl.QuerySerializerImpl;
 
 public class SerializationTest {
 
@@ -33,12 +33,12 @@ public class SerializationTest {
 					"}\n";
 						
 	@Test
-	public void testSerialize() throws IOException {
+	public void testSerialize() throws SerializationException {
 		Query userQuery = QueryTestUtil.buildUser();
 		
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		
-		QuerySerializer serializer = new QuerySerializer();
+		QuerySerializer serializer = new QuerySerializerImpl();
 		serializer.serialize(outputStream, userQuery, false);
 		
 		String nonPrettyOutputString = outputStream.toString();
@@ -53,12 +53,12 @@ public class SerializationTest {
 	}
 	
 	@Test
-	public void testSerializePrettyPrint() throws IOException {
+	public void testSerializePrettyPrint() throws SerializationException {
 		Query userQuery = QueryTestUtil.buildUser();
 
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-		QuerySerializer serializer = new QuerySerializer();
+		QuerySerializer serializer = new QuerySerializerImpl();
 		serializer.serialize(outputStream, userQuery, true);
 		
 		String prettyOutputString = outputStream.toString();

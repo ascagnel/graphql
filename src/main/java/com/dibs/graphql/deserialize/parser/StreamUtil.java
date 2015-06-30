@@ -1,25 +1,23 @@
-package com.dibs.graphql.parser.reader;
+package com.dibs.graphql.deserialize.parser;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.dibs.graphql.data.parse.TokenData;
-import com.dibs.graphql.data.parse.TokenType;
+import com.dibs.graphql.data.deserialize.TokenData;
+import com.dibs.graphql.data.deserialize.TokenType;
 
-public class ReaderUtil {
-	private static final Log LOG = LogFactory.getLog(ReaderUtil.class);
+public class StreamUtil {
+	private static final Log LOG = LogFactory.getLog(StreamUtil.class);
 	
 	private static final int DEFAULT_BUFFER_SIZE = 256;
 	
 	private static int bufferSize = DEFAULT_BUFFER_SIZE;
 	
 	public static void setBufferSize(int bufferSize) {
-		ReaderUtil.bufferSize = bufferSize;
+		StreamUtil.bufferSize = bufferSize;
 	}
 
 	public static TokenData readUntilToken(Reader reader) throws IOException {
@@ -54,29 +52,22 @@ public class ReaderUtil {
 	}
 	
 	public static char[] insertAndResize(char[] buffer, int index, char charToAppend) {
-		if (index >= buffer.length - 1) {
-			buffer = new char[buffer.length * 2];
-		}
+		char[] retVal = null;
 		
-		buffer[index] = charToAppend;
-		return buffer;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public static <T> Set<T> newHashSet(T... objs) {
-	    Set<T> set = new HashSet<>();
-	    
-	    for (T obj : objs) {
-	        set.add(obj);
-	    }
-	    
-	    return set;
-	}
-	
-	public static <D> void assertContains(Set<D> expected, D actual) {
-		if (!expected.contains(actual)) {
-			throw new RuntimeException("Invalid value [" + actual +"]. Expected one of: " + expected);
+		// If the index is greater than the size, double size and copy contents
+		if (index >= buffer.length - 1) {
+			retVal = new char[buffer.length * 2];
+			
+			for (int i = 0; i < buffer.length; i++) {
+				retVal[i] = buffer[i];
+			}			
+		} else {
+			retVal = buffer;
 		}
+
+		retVal[index] = charToAppend;
+		
+		return retVal;
 	}
 
 	public static String nullIfEmpty(String input) {

@@ -1,4 +1,4 @@
-package com.dibs.graphql.deserialize;
+package com.dibs.graphql.deserialize.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,22 +11,24 @@ import org.apache.commons.logging.LogFactory;
 
 import com.dibs.graphql.data.Query;
 import com.dibs.graphql.data.QueryBuilder;
+import com.dibs.graphql.data.deserialize.QueryToken;
+import com.dibs.graphql.data.deserialize.TokenType;
+import com.dibs.graphql.deserialize.QueryDeserializer;
+import com.dibs.graphql.deserialize.SerializationException;
 import com.dibs.graphql.deserialize.parser.QueryTokenParser;
 import com.dibs.graphql.deserialize.parser.impl.StreamingQueryTokenParser;
-import com.dibs.graphql.parser.data.QueryToken;
-import com.dibs.graphql.parser.data.TokenType;
 
-public class QueryDeserializer {
-	private static final Log LOG = LogFactory.getLog(QueryDeserializer.class);
+public class QueryDeserializerStackImpl implements QueryDeserializer {
+	private static final Log LOG = LogFactory.getLog(QueryDeserializerStackImpl.class);
 	
 	private Stack<Query> nodes;
 	
 	private QueryTokenParser tokenReader;
 	
-	public QueryDeserializer() {
+	public QueryDeserializerStackImpl() {
 	}
 	
-	public Query parse(InputStream inputStream) throws ParseException {
+	public Query deserialize(InputStream inputStream) throws SerializationException {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Parsing GraphQL input stream");
 		}
@@ -76,12 +78,12 @@ public class QueryDeserializer {
 				LOG.debug("Finished parsing input stream, closing GraphQL token reader.");
 			}
 		} catch (IOException e) {
-			throw new ParseException(e);
+			throw new SerializationException(e);
 		} finally {
 			try {
 				tokenReader.close();
 			} catch (IOException e) {
-				throw new ParseException(e);
+				throw new SerializationException(e);
 			}
 		}
 		return rootNode;

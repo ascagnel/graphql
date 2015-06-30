@@ -1,11 +1,11 @@
-package com.dibs.graphql.parser.reader;
+package com.dibs.graphql.deserialize.parser;
 
 import java.io.Closeable;
 import java.io.IOException;
 
-import com.dibs.graphql.data.parse.QueryToken;
+import com.dibs.graphql.data.deserialize.QueryToken;
 
-public interface QueryTokenReader extends Closeable {
+public interface QueryTokenParser extends Closeable {
 
 	public boolean hasNext();
 	public QueryToken next() throws IOException;

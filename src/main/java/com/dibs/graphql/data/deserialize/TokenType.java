@@ -1,4 +1,4 @@
-package com.dibs.graphql.data.parse;
+package com.dibs.graphql.data.deserialize;
 
 import java.util.HashMap;
 import java.util.Map;
