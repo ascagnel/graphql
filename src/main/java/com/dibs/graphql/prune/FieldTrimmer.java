@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.beanutils.PropertyUtilsBean;
@@ -30,11 +31,26 @@ public class FieldTrimmer<I> {
 		this.fields = fields;
 	}
 
-	public static void trim(Object o, Set<String> fields)
+	public static <O> void trim(List<O> objects, Set<String> fields) {
+		try
+		{
+			FieldTrimmer<O> fieldTrimmer = new FieldTrimmer<>(fields);
+			
+			for (O o : objects) {
+				fieldTrimmer.transform(o);
+			}
+		}
+		catch (Exception ex)
+		{
+			throw new RuntimeException(ex);
+		}
+	}
+	
+	public static <O> void trim(O o, Set<String> fields)
 	{
 		try
 		{
-			FieldTrimmer<Object> fieldTrimmer = new FieldTrimmer<>(fields);
+			FieldTrimmer<O> fieldTrimmer = new FieldTrimmer<>(fields);
 			fieldTrimmer.transform(o);
 		}
 		catch (Exception ex)

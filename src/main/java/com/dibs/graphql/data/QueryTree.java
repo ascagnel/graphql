@@ -13,6 +13,7 @@ public class QueryTree {
 	private static final Log LOG = LogFactory.getLog(QueryTree.class);
 	
 	private Query rootNode;
+	private Map<String, String> params;
 	private Map<String, Query> childMap;
 	private Set<String> fields;
 	
@@ -21,7 +22,11 @@ public class QueryTree {
 	}
 	
 	private void init() {
-		//Assert.isNotNull(rootNode);
+		params = new HashMap<>();
+		
+		if (rootNode.getParams() != null) {
+			params.putAll(rootNode.getParams());
+		}
 		
 		childMap = new HashMap<>();
 		
@@ -47,9 +52,15 @@ public class QueryTree {
 	}
 
 	public boolean containsChild(String childName) {
-		//Assert.isNotNull(childName);
-		
 		return getChildFields().contains(childName);
+	}
+	
+	public void addParamValue(String key, String value) {
+		params.put(key, value);
+	}
+	
+	public String getParamValue(String paramKey) {
+		return params.get(paramKey);
 	}
 	
 	public QueryTree getChildTree(String childName) {
@@ -63,10 +74,10 @@ public class QueryTree {
 			return null;
 		}
 		
-		return new QueryTree(child);
+		return QueryTree.fromQuery(child);
 	}
 	
-	public static QueryTree fromTree(Query rootNode) {
+	public static QueryTree fromQuery(Query rootNode) {
 		QueryTree provider = new QueryTree(rootNode);
 		provider.init();
 		
