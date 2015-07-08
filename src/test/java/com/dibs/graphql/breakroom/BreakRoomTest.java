@@ -125,41 +125,4 @@ public class BreakRoomTest {
 		assertNotNull(product.getDescription());
 		assertNotNull(product.getCalories());
 	}
-	
-	/*
-	private Node<String> buildVendingMachineFieldPolicy() {
-		Node<String> rootNode = buildTopLevelNode();
-		Node<String> vendingMachines = new Node<String>(BreakRoom.VENDING_MACHINES_PROPERTY);
-		rootNode.add(vendingMachines);
-		
-		return rootNode;
-	}
-	
-	@Test
-	public void testOnlyTopLevel() {
-		QueryTree onlytopLevelFields = QueryTree.fromQuery(buildTopLevelQuery());
-		
-		BreakRoom breakRoom = breakRoomFacade.read("Test", onlytopLevelFields);
-		
-		assertNotNull(breakRoom);
-		assertNotNull(breakRoom.getName());
-		assertNull(breakRoom.getVendingMachines());
-	}
-	
-	@Test
-	public void testDownToVengingMachines() {
-		QueryTree onlytopLevelFields = QueryTree.fromQuery(buildVendingMachineFieldPolicy());
-		
-		
-		BreakRoom breakRoom = breakRoomFacade.read("Test", onlytopLevelFields);
-		
-		assertNotNull(breakRoom);
-		assertNotNull(breakRoom.getName());
-		assertNotNull(breakRoom.getVendingMachines());
-		
-		VendingMachine vendingMachine = breakRoom.getVendingMachines().get(0);
-		assertNotNull(vendingMachine);
-		assertNotNull(vendingMachine.getId());
-		assertNull(vendingMachine.getProducts());
-	}*/
 }
