@@ -12,7 +12,7 @@ public class QueryTestUtil {
 						"      uri,\n" + 
 						"      width,\n" + 
 						"      height\n" + 
-						"    }, test {\n" + 
+						"    }, test (field : [abc, def, fg, 456]) {\n" + 
 						"		123 \n" + 
 						"    } " +
 						"  }\n" + 
@@ -27,7 +27,7 @@ public class QueryTestUtil {
 					.subQuery(
 						new QueryBuilder()
 							.name("user")
-							.param("id", "123")
+							.param("id", new Integer(123))
 							.subQuery(new QueryBuilder().name("id").build())
 							.subQuery(new QueryBuilder().name("name").param("style", "FULL").build())
 							.subQuery(new QueryBuilder().name("isViewerFriend").build())
@@ -43,6 +43,7 @@ public class QueryTestUtil {
 							.subQuery(
 								new QueryBuilder()
 									.name("test")
+									.param("field", new String[]{"abc", "def", "fg", "456"})
 									.subQuery(new QueryBuilder().name("123").build()).build()
 							)
 						.build()

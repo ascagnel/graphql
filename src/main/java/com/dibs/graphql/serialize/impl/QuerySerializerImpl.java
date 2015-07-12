@@ -105,7 +105,7 @@ public class QuerySerializerImpl implements QuerySerializer {
 				indent(stream, depth);
 			}
 			
-			stream.write(Punctuator.CLOSE_CURELY_BRACE.getValue());
+			stream.write(Punctuator.CLOSE_CURLY_BRACE.getValue());
 		}
 
 		if (!isLastChild) {

@@ -20,7 +20,7 @@ public class StreamUtil {
 		StreamUtil.bufferSize = bufferSize;
 	}
 
-	public static TokenData readUntilToken(Reader reader) throws IOException {
+	public static TokenData readUntilPunctuator(Reader reader) throws IOException {
 		int nextInt;
 		
 		char[] buffer = new char[bufferSize];

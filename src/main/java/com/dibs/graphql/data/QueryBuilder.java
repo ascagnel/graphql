@@ -39,7 +39,7 @@ public class QueryBuilder {
 		return this;
 	}
 	
-	public QueryBuilder param(String key, String value) {
+	public QueryBuilder param(String key, Object value) {
 		if (params == null) {
 			params = new LinkedHashMap<>();
 		}

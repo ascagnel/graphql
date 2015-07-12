@@ -7,7 +7,7 @@ import java.util.Map;
 public enum Punctuator {
 	
 	OPEN_CURLY_BRACE('{'),
-	CLOSE_CURELY_BRACE('}'),
+	CLOSE_CURLY_BRACE('}'),
 	COMMA(','),
 	OPEN_PAREN('('),
 	CLOSE_PAREN(')'),

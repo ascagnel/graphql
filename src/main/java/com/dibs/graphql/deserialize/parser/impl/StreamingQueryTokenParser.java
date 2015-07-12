@@ -21,6 +21,7 @@ public class StreamingQueryTokenParser implements QueryTokenParser {
 	private static final Log LOG = LogFactory.getLog(StreamingQueryTokenParser.class);
 	
 	private Reader reader;
+	private ArgumentParser argumentParser;
 	
 	public StreamingQueryTokenParser(InputStream inputStream) {
 		init(inputStream);
@@ -28,6 +29,7 @@ public class StreamingQueryTokenParser implements QueryTokenParser {
 	
 	private void init(InputStream inputStream) {
 		reader = new InputStreamReader(inputStream);
+		argumentParser = new ArgumentParser();
 	}
 	
 	public boolean hasNext() {
@@ -39,40 +41,10 @@ public class StreamingQueryTokenParser implements QueryTokenParser {
 		}
 	}
 	
-	
-	private Map<String, Object> parseAttributes(Reader reader) throws IOException {
-		Map<String, Object> attributes = new LinkedHashMap<>(); 
-		
-		TokenData key = null;
-		TokenData value = null;
-		
-		for (boolean reachedAttributeTerminator = false; !reachedAttributeTerminator; reachedAttributeTerminator = TokenUtil.isAttributeTerminator(value)) {
-			key = StreamUtil.readUntilToken(reader);
-			Util.assertContains(TokenUtil.FILTER_KEY_TERMINATORS, key.getType());
-			
-			value = StreamUtil.readUntilToken(reader);
-			Util.assertContains(TokenUtil.FILTER_VALUE_TERMINATORS, value.getType());
-			
-			// Format the input to remove any leading/trailing whitespace
-			String filterKey = StreamUtil.nullIfEmpty(new String(key.getValue()));
-			String filterValue = StreamUtil.nullIfEmpty(new String(value.getValue()));
-			
-			// Save the filter
-			attributes.put(filterKey, filterValue);
-		}
-		
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("Parsed filters [ " + attributes + "]");
-		}
-		
-		return attributes;
-	}
-	
-	
 	public QueryToken next() throws IOException {
 		QueryToken graphQltoken = new QueryToken();
 
-		TokenData token = StreamUtil.readUntilToken(reader);
+		TokenData token = StreamUtil.readUntilPunctuator(reader);
 		
 		Util.assertContains(TokenUtil.TOKEN_VALUE_TERMINATORS, token.getType());
 
@@ -85,10 +57,10 @@ public class StreamingQueryTokenParser implements QueryTokenParser {
 		// Loop to see if there are additional tokens, such as attributes or filters
 		while (!TokenUtil.isTokenTerminator(token)) {
 			if (TokenUtil.isAttributeStart(token)) {
-				graphQltoken.setAttributes(parseAttributes(reader));
+				graphQltoken.setArguments(argumentParser.parseArguments(reader));
 			}
 			
-			token = StreamUtil.readUntilToken(reader);
+			token = StreamUtil.readUntilPunctuator(reader);
 		}
 		
 		graphQltoken.setValue(graphQLTokenValue);

@@ -34,7 +34,7 @@ public class QueryToken {
 		return attributes;
 	}
 
-	public QueryToken setAttributes(Map<String, Object> attributes) {
+	public QueryToken setArguments(Map<String, Object> attributes) {
 		this.attributes = attributes;
 		return this;
 	}

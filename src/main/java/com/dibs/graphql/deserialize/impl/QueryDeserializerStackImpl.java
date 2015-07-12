@@ -69,7 +69,7 @@ public class QueryDeserializerStackImpl implements QueryDeserializer {
 				
 				if (token.getTokenType() == Punctuator.OPEN_CURLY_BRACE) {
 					nodes.push(node);
-				} else if (token.getTokenType() == Punctuator.CLOSE_CURELY_BRACE) {
+				} else if (token.getTokenType() == Punctuator.CLOSE_CURLY_BRACE) {
 					nodes.pop();
 				}
 			}
