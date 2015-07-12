@@ -82,7 +82,6 @@ public class BreakRoomTest {
 										.subQuery(new QueryBuilder().name("name").build())
 										.subQuery(new QueryBuilder().name("description").build())
 										.subQuery(new QueryBuilder().name("calories").build())
-
 									.build())
 							.build())
 						.build())

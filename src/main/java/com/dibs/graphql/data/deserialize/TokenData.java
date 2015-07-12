@@ -3,12 +3,12 @@ package com.dibs.graphql.data.deserialize;
 
 public class TokenData {
 	private char[] value;
-	private TokenType type;
+	private Punctuator type;
 	
 	public TokenData() {
 	}
 	
-	public TokenData(char[] value, TokenType type) {
+	public TokenData(char[] value, Punctuator type) {
 		this.value = value;
 		this.type = type;
 	}
@@ -21,11 +21,11 @@ public class TokenData {
 		this.value = value;
 	}
 
-	public TokenType getType() {
+	public Punctuator getType() {
 		return type;
 	}
 
-	public void setType(TokenType type) {
+	public void setType(Punctuator type) {
 		this.type = type;
 	}
 }

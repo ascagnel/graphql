@@ -10,7 +10,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.dibs.graphql.data.Query;
-import com.dibs.graphql.data.deserialize.TokenType;
+import com.dibs.graphql.data.deserialize.Punctuator;
 import com.dibs.graphql.deserialize.SerializationException;
 import com.dibs.graphql.serialize.QuerySerializer;
 
@@ -42,28 +42,28 @@ public class QuerySerializerImpl implements QuerySerializer {
 			stream.write(SPACE);
 		}
 		
-		ArrayList<Map.Entry<String, String>> attributes = new ArrayList<>(query.getParams().entrySet());
+		ArrayList<Map.Entry<String, Object>> attributes = new ArrayList<>(query.getArguments().entrySet());
 				
-		stream.write(TokenType.ATTRIBUTE_START.getValue());
+		stream.write(Punctuator.OPEN_PAREN.getValue());
 		
 		int attributeSize = attributes.size();
 
 		for (int i = 0; i < attributeSize; i++) {
 			boolean isLastAttribute = (i == (attributeSize - 1));
 			
-			Map.Entry<String, String> attribute = attributes.get(i);
+			Map.Entry<String, Object> attribute = attributes.get(i);
 			
 			stream.write(attribute.getKey().getBytes());
-			stream.write(TokenType.ATTRIBUTE_DELIM.getValue());
-			stream.write(attribute.getValue().getBytes());
+			stream.write(Punctuator.COLON.getValue());
+			stream.write(attribute.getValue().toString().getBytes());
 			
 			if (!isLastAttribute) {
-				stream.write(TokenType.OBJECT_DELIM.getValue());
+				stream.write(Punctuator.COMMA.getValue());
 			}
 			
 		}
 		
-		stream.write(TokenType.ATTRIBUTE_END.getValue());
+		stream.write(Punctuator.CLOSE_PAREN.getValue());
 	}
 	
 	private void writeQuery(OutputStream stream, Query query, int depth, boolean isPrettyPrint, boolean isLastChild) throws IOException {	
@@ -76,7 +76,7 @@ public class QuerySerializerImpl implements QuerySerializer {
 			stream.write(query.getName().getBytes());
 		}
 		
-		if (query.getParams() != null) {
+		if (query.getArguments() != null) {
 			writeAttributes(stream, query, isPrettyPrint);
 		}
 		
@@ -87,7 +87,7 @@ public class QuerySerializerImpl implements QuerySerializer {
 			if (query.getName() != null && isPrettyPrint) {
 				stream.write(SPACE);
 			}
-			stream.write(TokenType.OBJECT_START.getValue());
+			stream.write(Punctuator.OPEN_CURLY_BRACE.getValue());
 			
 			if (isPrettyPrint) {
 				stream.write(LINE_SEPARATOR);
@@ -105,11 +105,11 @@ public class QuerySerializerImpl implements QuerySerializer {
 				indent(stream, depth);
 			}
 			
-			stream.write(TokenType.OBJECT_END.getValue());
+			stream.write(Punctuator.CLOSE_CURELY_BRACE.getValue());
 		}
 
 		if (!isLastChild) {
-			stream.write(TokenType.OBJECT_DELIM.getValue());
+			stream.write(Punctuator.COMMA.getValue());
 		}
 		
 		if (isPrettyPrint) {

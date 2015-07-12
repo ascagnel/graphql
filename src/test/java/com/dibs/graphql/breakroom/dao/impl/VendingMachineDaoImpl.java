@@ -17,7 +17,7 @@ public class VendingMachineDaoImpl implements VendingMachineDao {
 		VendingMachine machine = new VendingMachine();
 		machine.setMerchandiseCount(5);
 		machine.setServicedBy("Matt");
-		machine.setId(Long.valueOf(query.getParamValue(VendingMachine.ID_PROPERTY)));
+		machine.setId((Long) query.getParamValue(VendingMachine.ID_PROPERTY));
 		
 		return machine;
 	}

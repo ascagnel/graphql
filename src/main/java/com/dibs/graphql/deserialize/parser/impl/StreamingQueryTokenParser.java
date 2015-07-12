@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -39,8 +39,9 @@ public class StreamingQueryTokenParser implements QueryTokenParser {
 		}
 	}
 	
-	private Map<String, String> parseAttributes(Reader reader) throws IOException {
-		Map<String, String> attributes = new HashMap<>();
+	
+	private Map<String, Object> parseAttributes(Reader reader) throws IOException {
+		Map<String, Object> attributes = new LinkedHashMap<>(); 
 		
 		TokenData key = null;
 		TokenData value = null;
@@ -66,6 +67,7 @@ public class StreamingQueryTokenParser implements QueryTokenParser {
 		
 		return attributes;
 	}
+	
 	
 	public QueryToken next() throws IOException {
 		QueryToken graphQltoken = new QueryToken();

@@ -11,7 +11,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
 public class Query {
 	private String name;
 	private List<Query> subQueries;
-	private Map<String, String> params;
+	private Map<String, Object> arguments;
 	
 	public Query() {
 	}
@@ -32,12 +32,12 @@ public class Query {
 		this.subQueries = subQueries;
 	}
 
-	public Map<String, String> getParams() {
-		return params;
+	public Map<String, Object> getArguments() {
+		return arguments;
 	}
 
-	public void setParams(Map<String, String> params) {
-		this.params = params;
+	public void setArguments(Map<String, Object> arguments) {
+		this.arguments = arguments;
 	}
 	
 	public boolean equals(Object o) {
@@ -57,7 +57,7 @@ public class Query {
 
 		return new EqualsBuilder()
 			.append(getName(), other.getName())
-			.append(getParams(), other.getParams())
+			.append(getArguments(), other.getArguments())
 			.append(getSubQueries(), other.getSubQueries())
 			.isEquals();
 	}
@@ -66,7 +66,7 @@ public class Query {
 	public int hashCode() {
 		return new HashCodeBuilder(19, 23)
 			.append(getName())
-			.append(getParams())
+			.append(getArguments())
 			.append(getSubQueries())
 			.hashCode();
 	}

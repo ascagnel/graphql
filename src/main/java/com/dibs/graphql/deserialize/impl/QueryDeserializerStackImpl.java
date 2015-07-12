@@ -12,7 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import com.dibs.graphql.data.Query;
 import com.dibs.graphql.data.QueryBuilder;
 import com.dibs.graphql.data.deserialize.QueryToken;
-import com.dibs.graphql.data.deserialize.TokenType;
+import com.dibs.graphql.data.deserialize.Punctuator;
 import com.dibs.graphql.deserialize.QueryDeserializer;
 import com.dibs.graphql.deserialize.SerializationException;
 import com.dibs.graphql.deserialize.parser.QueryTokenParser;
@@ -67,9 +67,9 @@ public class QueryDeserializerStackImpl implements QueryDeserializer {
 					subQueries.add(node);
 				}
 				
-				if (token.getTokenType() == TokenType.OBJECT_START) {
+				if (token.getTokenType() == Punctuator.OPEN_CURLY_BRACE) {
 					nodes.push(node);
-				} else if (token.getTokenType() == TokenType.OBJECT_END) {
+				} else if (token.getTokenType() == Punctuator.CLOSE_CURELY_BRACE) {
 					nodes.pop();
 				}
 			}

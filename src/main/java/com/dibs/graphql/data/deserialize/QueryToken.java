@@ -6,8 +6,8 @@ public class QueryToken {
 	
 	private String fullTokenValue;
 	private String value;
-	private Map<String, String> attributes;
-	private TokenType tokenType;
+	private Map<String, Object> attributes;
+	private Punctuator tokenType;
 	
 	public QueryToken() {
 	}
@@ -30,20 +30,20 @@ public class QueryToken {
 		return this;
 	}
 
-	public Map<String, String> getAttributes() {
+	public Map<String, Object> getAttributes() {
 		return attributes;
 	}
 
-	public QueryToken setAttributes(Map<String, String> attributes) {
+	public QueryToken setAttributes(Map<String, Object> attributes) {
 		this.attributes = attributes;
 		return this;
 	}
 
-	public TokenType getTokenType() {
+	public Punctuator getTokenType() {
 		return tokenType;
 	}
 
-	public QueryToken setTokenType(TokenType tokenType) {
+	public QueryToken setTokenType(Punctuator tokenType) {
 		this.tokenType = tokenType;
 		return this;
 	}

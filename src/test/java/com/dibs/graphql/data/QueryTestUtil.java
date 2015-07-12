@@ -6,9 +6,9 @@ public class QueryTestUtil {
 		String userString = "{\n" + 
 						"  user (id: 123) {\n" + 
 						"    id,\n" + 
-						"    name,\n" + 
+						"    name (style: FULL),\n" + 
 						"    isViewerFriend,\n" + 
-						"    profilePicture (width:50px) {\n" + 
+						"    profilePicture (width:50px, height: 100px) {\n" + 
 						"      uri,\n" + 
 						"      width,\n" + 
 						"      height\n" + 
@@ -29,12 +29,13 @@ public class QueryTestUtil {
 							.name("user")
 							.param("id", "123")
 							.subQuery(new QueryBuilder().name("id").build())
-							.subQuery(new QueryBuilder().name("name").build())
+							.subQuery(new QueryBuilder().name("name").param("style", "FULL").build())
 							.subQuery(new QueryBuilder().name("isViewerFriend").build())
 							.subQuery(
 								new QueryBuilder()
 									.name("profilePicture")
 									.param("width", "50px")
+									.param("height", "100px")
 									.subQuery(new QueryBuilder().name("uri").build())
 									.subQuery(new QueryBuilder().name("width").build())
 									.subQuery(new QueryBuilder().name("height").build())

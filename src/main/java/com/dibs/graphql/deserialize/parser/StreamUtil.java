@@ -7,7 +7,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.dibs.graphql.data.deserialize.TokenData;
-import com.dibs.graphql.data.deserialize.TokenType;
+import com.dibs.graphql.data.deserialize.Punctuator;
 
 public class StreamUtil {
 	private static final Log LOG = LogFactory.getLog(StreamUtil.class);
@@ -26,12 +26,12 @@ public class StreamUtil {
 		char[] buffer = new char[bufferSize];
 		int index = 0;
 		
-		TokenType tokenType = null;
+		Punctuator tokenType = null;
 		
 		while ((nextInt = reader.read()) != -1) {
 			char nextChar = (char) nextInt;
 			
-			tokenType = TokenType.fromValue(nextChar);
+			tokenType = Punctuator.fromValue(nextChar);
 			
 			// We have a token
 			if (tokenType != null) {

@@ -13,15 +13,15 @@ import com.dibs.graphql.serialize.impl.QuerySerializerImpl;
 
 public class SerializationTest {
 
-	private static final String NON_PRETTY_SERIALIZED_USER = "{user(id:123){id,name,isViewerFriend,profilePicture(width:50px){uri,width,height},test{123}}}";
+	private static final String NON_PRETTY_SERIALIZED_USER = "{user(id:123){id,name(style:FULL),isViewerFriend,profilePicture(width:50px,height:100px){uri,width,height},test{123}}}";
 	
 	private static final String PRETTY_SERIALIZED_USER = 
 					"{\n" + 
 					"	user (id:123) {\n" + 
 					"		id,\n" + 
-					"		name,\n" + 
+					"		name (style:FULL),\n" + 
 					"		isViewerFriend,\n" + 
-					"		profilePicture (width:50px) {\n" + 
+					"		profilePicture (width:50px,height:100px) {\n" + 
 					"			uri,\n" + 
 					"			width,\n" + 
 					"			height\n" + 
