@@ -41,3 +41,13 @@ More robust documentation is coming. However, in the interim, please refer below
 
 ### Integration
 I created a dummy subsystem "BreakRoom" to demonstrate how this integrates with a Java system. A BreakRoom has VendingMachines which have VendingMachineProducts. You'll see examples of the code making decisions on whether a BreakRoom should fetch VendingMachines depending on whether they're specified in the request. Also, this will perform pruning at the facade level but this could easily be moved the the DAO level.
+
+## Roadmap
+1. QueryResponse object that allows the facade to respond with a GraphQL message. This will be validated against the request Query.
+2. Better error messages and input validation for the deserialization layer.
+3. More robust support for GraphQL specification including fragments and variables.
+
+## Contributing and Bug Reports
+Pull requests are welcome. For inquiries on contributing and bug reports, please email matthew.mason@1stdibs.com.
+
+
