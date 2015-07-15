@@ -69,7 +69,6 @@ public class QuerySerializerImpl implements QuerySerializer {
 					stream.write(SPACE);
 				}
 			}
-			
 		}
 		
 		stream.write(Punctuator.CLOSE_PAREN.getValue());
@@ -79,6 +78,15 @@ public class QuerySerializerImpl implements QuerySerializer {
 
 		if (isPrettyPrint) {
 			indent(stream, depth);
+		}
+		
+		if (query.getAlias() != null) {
+			stream.write(query.getAlias().getBytes());
+			stream.write(Punctuator.COLON.getValue());
+
+			if (isPrettyPrint) {
+				stream.write(SPACE);
+			}
 		}
 		
 		if (query.getName() != null) {

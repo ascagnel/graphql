@@ -9,6 +9,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
 
 public class Query {
 	private String name;
+	private String alias;
 	private List<Query> subQueries;
 	private Arguments arguments;
 
@@ -21,6 +22,14 @@ public class Query {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
 	}
 
 	public List<Query> getSubQueries() {
@@ -56,6 +65,7 @@ public class Query {
 
 		return new EqualsBuilder()
 			.append(getName(), other.getName())
+			.append(getAlias(), other.getAlias())
 			.append(getArguments(), other.getArguments())
 			.append(getSubQueries(), other.getSubQueries())
 			.isEquals();
@@ -65,6 +75,7 @@ public class Query {
 	public int hashCode() {
 		return new HashCodeBuilder(19, 23)
 			.append(getName())
+			.append(getAlias())
 			.append(getArguments())
 			.append(getSubQueries())
 			.hashCode();

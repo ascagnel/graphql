@@ -4,15 +4,15 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Set;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 public class Arguments extends LinkedHashMap<String, Object> {
 
 	private static final long serialVersionUID = 3575680735821573580L;
 	
-
 	public Arguments() {
 		super();
 	}
-	
 
 	@SuppressWarnings("unchecked")
 	public <T> T getTypedValue(String key) {
@@ -41,16 +41,16 @@ public class Arguments extends LinkedHashMap<String, Object> {
 		
 		Arguments other = (Arguments) o;
 		
-		Set<String> allArguments = keySet();
-		Set<String> allOtherArguments = other.keySet();
+		Set<String> keys = keySet();
+		Set<String> otherKeys = other.keySet();
 		
-		if (!allArguments.equals(allOtherArguments)) {
+		if (!keys.equals(otherKeys)) {
 			return false;
 		}
 		
-		for (String argument : allArguments) {
-			Object value = getTypedValue(argument);
-			Object otherValue = other.getTypedValue(argument);
+		for (String key : keys) {
+			Object value = getTypedValue(key);
+			Object otherValue = other.getTypedValue(key);
 			
 			if (value == null && otherValue != null  || value != null && otherValue == null) {
 				return false;
@@ -58,7 +58,7 @@ public class Arguments extends LinkedHashMap<String, Object> {
 			
 			if (value != null) {
 				if (value.getClass().isArray()) {
-					if (!Arrays.deepEquals((Object[]) value, (Object[])otherValue)) {
+					if (!Arrays.deepEquals((Object[]) value, (Object[]) otherValue)) {
 						return false;
 					}
 				} else {
@@ -70,5 +70,12 @@ public class Arguments extends LinkedHashMap<String, Object> {
 		}
 		
 		return true;
+	}
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(7, 41)
+			.append(entrySet())
+			.hashCode();
 	}
 }

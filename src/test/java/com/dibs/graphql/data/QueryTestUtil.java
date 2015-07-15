@@ -5,7 +5,7 @@ public class QueryTestUtil {
 	public static String getUserString() {
 		String userString = "{\n" + 
 						"  user (id: 123) {\n" + 
-						"    id,\n" + 
+						"    identifier: id,\n" + 
 						"    name (style: FULL),\n" + 
 						"    isViewerFriend,\n" + 
 						"    profilePicture (width:50px, height: 100px) {\n" + 
@@ -28,7 +28,7 @@ public class QueryTestUtil {
 						new QueryBuilder()
 							.name("user")
 							.argument("id", new Integer(123))
-							.subQuery(new QueryBuilder().name("id").build())
+							.subQuery(new QueryBuilder().name("id").alias("identifier").build())
 							.subQuery(new QueryBuilder().name("name").argument("style", "FULL").build())
 							.subQuery(new QueryBuilder().name("isViewerFriend").build())
 							.subQuery(

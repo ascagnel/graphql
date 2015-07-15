@@ -16,7 +16,7 @@ public class TokenUtil {
 		return token != null && token.getType() == Punctuator.CLOSE_PAREN;
 	}	
 	
-	public static boolean isAttributeStart(TokenData token) {
+	public static boolean isArgumentStart(TokenData token) {
 		Punctuator tokenType = token.getType();
 		
 		return tokenType == Punctuator.OPEN_PAREN;

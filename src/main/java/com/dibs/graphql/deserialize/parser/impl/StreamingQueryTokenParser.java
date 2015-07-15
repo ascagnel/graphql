@@ -59,7 +59,7 @@ public class StreamingQueryTokenParser implements QueryTokenParser {
 		}
 		// Loop to see if there are additional tokens, such as attributes or filters
 		while (!TokenUtil.isTokenTerminator(token)) {
-			if (TokenUtil.isAttributeStart(token)) {
+			if (TokenUtil.isArgumentStart(token)) {
 				graphQltoken.setArguments(argumentParser.parseArguments(reader));
 			}
 			

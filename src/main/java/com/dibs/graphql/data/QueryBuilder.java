@@ -6,6 +6,7 @@ import java.util.List;
 public class QueryBuilder {
 
 	private String name;
+	private String alias;
 	private List<Query> subQueries;
 	private Arguments arguments;
 	
@@ -16,6 +17,11 @@ public class QueryBuilder {
 		this.name = name;
 		return this;
 	}
+	
+	public QueryBuilder alias(String alias) {
+		this.alias = alias;
+		return this;
+	}	
 	
 	public QueryBuilder subQueries(List<Query> subQueries) {
 		this.subQueries = subQueries;
@@ -50,6 +56,7 @@ public class QueryBuilder {
 	public Query build() {
 		Query query = new Query();
 		query.setName(name);
+		query.setAlias(alias);
 		query.setArguments(arguments);
 		query.setSubQueries(subQueries);
 		
