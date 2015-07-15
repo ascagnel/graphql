@@ -1,15 +1,13 @@
 package com.dibs.graphql.data;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class QueryBuilder {
 
 	private String name;
 	private List<Query> subQueries;
-	private Map<String, Object> params;
+	private Arguments arguments;
 	
 	public QueryBuilder() {
 	}
@@ -34,17 +32,17 @@ public class QueryBuilder {
 		return this;
 	}
 	
-	public QueryBuilder params(Map<String, Object> params) {
-		this.params = params;
+	public QueryBuilder arguments(Arguments arguments) {
+		this.arguments = arguments;
 		return this;
 	}
 	
-	public QueryBuilder param(String key, Object value) {
-		if (params == null) {
-			params = new LinkedHashMap<>();
+	public QueryBuilder argument(String key, Object value) {
+		if (arguments == null) {
+			arguments = new Arguments();
 		}
 		
-		params.put(key, value);
+		arguments.put(key, value);
 		
 		return this;
 	}
@@ -52,7 +50,7 @@ public class QueryBuilder {
 	public Query build() {
 		Query query = new Query();
 		query.setName(name);
-		query.setArguments(params);
+		query.setArguments(arguments);
 		query.setSubQueries(subQueries);
 		
 		return query;

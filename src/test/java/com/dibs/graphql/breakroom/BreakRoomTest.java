@@ -54,7 +54,7 @@ public class BreakRoomTest {
 			new QueryBuilder()
 				.subQuery(new QueryBuilder()
 					.name("breakRoom")
-					.param("id", "123")
+					.argument("id", 123)
 						.subQuery(new QueryBuilder().name("id").build())
 						.subQuery(new QueryBuilder().name("name").build())
 						.build())
@@ -68,7 +68,7 @@ public class BreakRoomTest {
 			new QueryBuilder()
 				.subQuery(new QueryBuilder()
 					.name("breakRoom")
-					.param("id", "123")
+					.argument("id", 123)
 						.subQuery(new QueryBuilder().name("id").build())
 						.subQuery(new QueryBuilder().name("name").build())
 						.subQuery(new QueryBuilder()
@@ -96,7 +96,7 @@ public class BreakRoomTest {
 		BreakRoom breakRoom = breakRoomFacade.read(requestQuery.getChildTree("breakRoom"));
 		assertNotNull(breakRoom);
 		assertNotNull(breakRoom.getId());
-		assertEquals(new Long(123), breakRoom.getId());
+		assertEquals(new Integer(123), breakRoom.getId());
 		assertNotNull(breakRoom.getName());
 		assertNull(breakRoom.getVendingMachines());
 	}
@@ -108,7 +108,7 @@ public class BreakRoomTest {
 		
 		assertNotNull(breakRoom);
 		assertNotNull(breakRoom.getId());
-		assertEquals(new Long(123), breakRoom.getId());
+		assertEquals(new Integer(123), breakRoom.getId());
 		assertNotNull(breakRoom.getName());
 		assertNotNull(breakRoom.getVendingMachines());
 		

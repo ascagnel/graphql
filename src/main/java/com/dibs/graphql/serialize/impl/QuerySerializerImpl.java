@@ -3,6 +3,7 @@ package com.dibs.graphql.serialize.impl;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -37,28 +38,36 @@ public class QuerySerializerImpl implements QuerySerializer {
 		}
 	}
 	
-	private void writeAttributes(OutputStream stream, Query query, boolean isPrettyPrint) throws IOException {
+	private void writeArguments(OutputStream stream, Query query, boolean isPrettyPrint) throws IOException {
 		if (isPrettyPrint) {
 			stream.write(SPACE);
 		}
 		
-		ArrayList<Map.Entry<String, Object>> attributes = new ArrayList<>(query.getArguments().entrySet());
+		ArrayList<Map.Entry<String, Object>> arguments = new ArrayList<>(query.getArguments().entrySet());
 				
 		stream.write(Punctuator.OPEN_PAREN.getValue());
 		
-		int attributeSize = attributes.size();
+		int argumentSize = arguments.size();
 
-		for (int i = 0; i < attributeSize; i++) {
-			boolean isLastAttribute = (i == (attributeSize - 1));
+		for (int i = 0; i < argumentSize; i++) {
+			boolean isLastAttribute = (i == (argumentSize - 1));
 			
-			Map.Entry<String, Object> attribute = attributes.get(i);
+			Map.Entry<String, Object> argument = arguments.get(i);
 			
-			stream.write(attribute.getKey().getBytes());
+			stream.write(argument.getKey().getBytes());
 			stream.write(Punctuator.COLON.getValue());
-			stream.write(attribute.getValue().toString().getBytes());
+			if (argument.getValue().getClass().isArray()) {
+				stream.write(Arrays.toString((Object[])argument.getValue()).getBytes());
+			} else {
+				stream.write(argument.getValue().toString().getBytes());
+			}
 			
 			if (!isLastAttribute) {
 				stream.write(Punctuator.COMMA.getValue());
+				
+				if (isPrettyPrint) {
+					stream.write(SPACE);
+				}
 			}
 			
 		}
@@ -77,7 +86,7 @@ public class QuerySerializerImpl implements QuerySerializer {
 		}
 		
 		if (query.getArguments() != null) {
-			writeAttributes(stream, query, isPrettyPrint);
+			writeArguments(stream, query, isPrettyPrint);
 		}
 		
 		List<Query> subQueries = query.getSubQueries();

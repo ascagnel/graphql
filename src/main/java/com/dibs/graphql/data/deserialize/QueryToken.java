@@ -1,12 +1,13 @@
 package com.dibs.graphql.data.deserialize;
 
-import java.util.Map;
+import com.dibs.graphql.data.Arguments;
 
 public class QueryToken {
 	
 	private String fullTokenValue;
+	private String alias;
 	private String value;
-	private Map<String, Object> attributes;
+	private Arguments arguments;
 	private Punctuator tokenType;
 	
 	public QueryToken() {
@@ -20,6 +21,14 @@ public class QueryToken {
 		this.fullTokenValue = fullTokenValue;
 		return this;
 	}
+	
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
+	}
 
 	public String getValue() {
 		return value;
@@ -30,12 +39,12 @@ public class QueryToken {
 		return this;
 	}
 
-	public Map<String, Object> getAttributes() {
-		return attributes;
+	public Arguments getArguments() {
+		return arguments;
 	}
 
-	public QueryToken setArguments(Map<String, Object> attributes) {
-		this.attributes = attributes;
+	public QueryToken setArguments(Arguments arguments) {
+		this.arguments = arguments;
 		return this;
 	}
 

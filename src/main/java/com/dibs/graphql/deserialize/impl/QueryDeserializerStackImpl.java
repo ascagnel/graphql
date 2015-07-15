@@ -45,7 +45,7 @@ public class QueryDeserializerStackImpl implements QueryDeserializer {
 				
 				Query node = new QueryBuilder()
 					.name(token.getValue())
-					.params(token.getAttributes())
+					.arguments(token.getArguments())
 					.build();
 				
 				if (rootNode == null) {

@@ -17,8 +17,8 @@ public class VendingMachineProductDaoImpl implements VendingMachineProductDao {
 		VendingMachineProduct product = new VendingMachineProduct();
 		product.setCalories(System.currentTimeMillis());
 		product.setDescription("A tasty snack attack ");
-		product.setName("Snack " + query.getParamValue(VendingMachineProduct.ID_PROPERTY));
-		product.setId((Long) query.getParamValue(VendingMachineProduct.ID_PROPERTY));
+		product.setName("Snack " + query.getArgumentValue(VendingMachineProduct.ID_PROPERTY));
+		product.setId((Integer) query.getArgumentValue(VendingMachineProduct.ID_PROPERTY));
 		
 		return product;
 	}
@@ -32,7 +32,7 @@ public class VendingMachineProductDaoImpl implements VendingMachineProductDao {
 			product.setCalories(System.currentTimeMillis());
 			product.setDescription("A tasty snack attack " + i);
 			product.setName("Snack " + i);
-			product.setId(Long.valueOf(i));
+			product.setId(i);
 			
 			products.add(product);
 		}

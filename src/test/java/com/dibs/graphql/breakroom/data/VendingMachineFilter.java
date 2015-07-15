@@ -6,18 +6,18 @@ import com.dibs.graphql.data.QueryTree;
 
 public class VendingMachineFilter {
 
-	private Long id;
+	private Integer id;
 	private String servicedBy;
 	private QueryTree query;
 	
 	public VendingMachineFilter() {
 	}
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public VendingMachineFilter setId(Long id) {
+	public VendingMachineFilter setId(Integer id) {
 		this.id = id;
 		return this;
 	}

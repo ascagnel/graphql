@@ -5,16 +5,16 @@ import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 public class VendingMachineProduct {
 
 	public static final String ID_PROPERTY = "id";
-	private Long id;
+	private Integer id;
 	private String name;
 	private Long calories;
 	private String description;
 	
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

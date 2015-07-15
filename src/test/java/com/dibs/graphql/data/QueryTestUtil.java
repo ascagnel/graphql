@@ -27,15 +27,15 @@ public class QueryTestUtil {
 					.subQuery(
 						new QueryBuilder()
 							.name("user")
-							.param("id", new Integer(123))
+							.argument("id", new Integer(123))
 							.subQuery(new QueryBuilder().name("id").build())
-							.subQuery(new QueryBuilder().name("name").param("style", "FULL").build())
+							.subQuery(new QueryBuilder().name("name").argument("style", "FULL").build())
 							.subQuery(new QueryBuilder().name("isViewerFriend").build())
 							.subQuery(
 								new QueryBuilder()
 									.name("profilePicture")
-									.param("width", "50px")
-									.param("height", "100px")
+									.argument("height", "100px")
+									.argument("width", "50px")
 									.subQuery(new QueryBuilder().name("uri").build())
 									.subQuery(new QueryBuilder().name("width").build())
 									.subQuery(new QueryBuilder().name("height").build())
@@ -43,7 +43,7 @@ public class QueryTestUtil {
 							.subQuery(
 								new QueryBuilder()
 									.name("test")
-									.param("field", new String[]{"abc", "def", "fg", "456"})
+									.argument("field", new String[]{"abc", "def", "fg", "456"})
 									.subQuery(new QueryBuilder().name("123").build()).build()
 							)
 						.build()

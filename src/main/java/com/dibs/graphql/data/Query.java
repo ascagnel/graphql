@@ -1,7 +1,6 @@
 package com.dibs.graphql.data;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -11,8 +10,8 @@ import org.apache.commons.lang.builder.ToStringStyle;
 public class Query {
 	private String name;
 	private List<Query> subQueries;
-	private Map<String, Object> arguments;
-	
+	private Arguments arguments;
+
 	public Query() {
 	}
 
@@ -32,11 +31,11 @@ public class Query {
 		this.subQueries = subQueries;
 	}
 
-	public Map<String, Object> getArguments() {
+	public Arguments getArguments() {
 		return arguments;
 	}
 
-	public void setArguments(Map<String, Object> arguments) {
+	public void setArguments(Arguments arguments) {
 		this.arguments = arguments;
 	}
 	

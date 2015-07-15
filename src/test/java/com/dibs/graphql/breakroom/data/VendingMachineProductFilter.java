@@ -8,17 +8,17 @@ import com.dibs.graphql.data.QueryTree;
 
 public class VendingMachineProductFilter {
 
-	private List<Long> ids;
+	private List<Integer> ids;
 	private QueryTree query;
 
 	public VendingMachineProductFilter() {
 	}
 
-	public List<Long> getIds() {
+	public List<Integer> getIds() {
 		return ids;
 	}
 
-	public VendingMachineProductFilter setIds(List<Long> ids) {
+	public VendingMachineProductFilter setIds(List<Integer> ids) {
 		this.ids = ids;
 		return this;
 	}

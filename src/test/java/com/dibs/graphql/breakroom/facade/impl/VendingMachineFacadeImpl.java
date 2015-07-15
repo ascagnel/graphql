@@ -37,7 +37,7 @@ public class VendingMachineFacadeImpl implements VendingMachineFacade {
 	@Override
 	public VendingMachine read(QueryTree query) {
 		// An id is required to read
-		if (query.getParamValue(VendingMachine.ID_PROPERTY) == null) {
+		if (query.getArgumentValue(VendingMachine.ID_PROPERTY) == null) {
 			throw new RuntimeException("Param [" + VendingMachine.ID_PROPERTY +"] required to read a VendingMachine");
 		}
 		

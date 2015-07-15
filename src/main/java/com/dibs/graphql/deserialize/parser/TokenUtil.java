@@ -34,6 +34,12 @@ public class TokenUtil {
 		return tokenType == Punctuator.CLOSE_BRACKET;
 	}
 	
+	public static boolean isAlias(TokenData token) {
+		Punctuator tokenType = token.getType();
+
+		return tokenType == Punctuator.COLON;
+	}
+	
 	public static boolean isTokenTerminator(TokenData token) {
 		if (token == null) {
 			return false;

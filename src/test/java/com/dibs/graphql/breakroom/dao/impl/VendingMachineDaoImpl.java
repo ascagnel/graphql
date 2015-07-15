@@ -17,7 +17,7 @@ public class VendingMachineDaoImpl implements VendingMachineDao {
 		VendingMachine machine = new VendingMachine();
 		machine.setMerchandiseCount(5);
 		machine.setServicedBy("Matt");
-		machine.setId((Long) query.getParamValue(VendingMachine.ID_PROPERTY));
+		machine.setId((Integer) query.getArgumentValue(VendingMachine.ID_PROPERTY));
 		
 		return machine;
 	}
@@ -29,7 +29,7 @@ public class VendingMachineDaoImpl implements VendingMachineDao {
 		for (int i = 0; i < 3; i++) {
 			VendingMachine machine = new VendingMachine();
 			machine.setMerchandiseCount(5);
-			machine.setId(Long.valueOf(i));
+			machine.setId(i);
 			machine.setServicedBy("Matt");
 			machines.add(machine);
 		}

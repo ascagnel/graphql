@@ -14,7 +14,7 @@ public class BreakRoomDaoImpl implements BreakRoomDao {
 	public BreakRoom read(QueryTree query) {
 		BreakRoom breakRoom = new BreakRoom();
 		breakRoom.setName("The Most Beautiful Break Room on Earth");
-		breakRoom.setId((Long)query.getParamValue(BreakRoom.ID_PROPERTY));
+		breakRoom.setId((Integer)query.getArgumentValue(BreakRoom.ID_PROPERTY));
 		return breakRoom;
 	}
 

@@ -3,13 +3,12 @@ package com.dibs.graphql.deserialize.parser.impl;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.dibs.graphql.data.Arguments;
 import com.dibs.graphql.data.deserialize.TokenData;
 import com.dibs.graphql.deserialize.TypeResolver;
 import com.dibs.graphql.deserialize.parser.StreamUtil;
@@ -20,8 +19,8 @@ public class ArgumentParser {
 
 	private static final Log LOG = LogFactory.getLog(ArgumentParser.class);
 
-	public Map<String, Object> parseArguments(Reader reader) throws IOException {
-		Map<String, Object> attributes = new HashMap<>();
+	public Arguments parseArguments(Reader reader) throws IOException {
+		Arguments arguments = new Arguments();
 		
 		TokenData argumentKeyData = null;
 		TokenData argumentValueData = null;
@@ -53,13 +52,13 @@ public class ArgumentParser {
 			String argumentKey = StreamUtil.nullIfEmpty(new String(argumentKeyData.getValue()));
 						
 			// Save the filter
-			attributes.put(argumentKey, typedArgumentValue);
+			arguments.put(argumentKey, typedArgumentValue);
 		}
 		
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("Parsed arguments [ " + attributes + "]");
+			LOG.debug("Parsed arguments [ " + arguments + "]");
 		}
 		
-		return attributes;
+		return arguments;
 	}
 }

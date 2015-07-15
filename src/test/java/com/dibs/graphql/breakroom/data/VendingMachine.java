@@ -7,7 +7,7 @@ import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 public class VendingMachine {
 
 	public static final String ID_PROPERTY = "id";
-	private Long id;
+	private Integer id;
 	private int merchandiseCount;
 	private String servicedBy;
 	
@@ -17,11 +17,11 @@ public class VendingMachine {
 	public VendingMachine() {
 	}
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

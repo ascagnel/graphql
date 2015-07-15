@@ -36,7 +36,7 @@ public class BreakRoomFacadeImpl implements BreakRoomFacade {
 
 	@Override
 	public BreakRoom read(QueryTree query) {
-		if (query.getParamValue(BreakRoom.ID_PROPERTY) == null) {
+		if (query.getArgumentValue(BreakRoom.ID_PROPERTY) == null) {
 			throw new RuntimeException("Param [" + BreakRoom.ID_PROPERTY + "] is required to read a break room");
 		}
 		

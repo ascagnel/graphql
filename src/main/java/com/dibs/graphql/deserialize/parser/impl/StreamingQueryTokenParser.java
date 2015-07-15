@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -45,6 +43,11 @@ public class StreamingQueryTokenParser implements QueryTokenParser {
 		QueryToken graphQltoken = new QueryToken();
 
 		TokenData token = StreamUtil.readUntilPunctuator(reader);
+		
+		if (TokenUtil.isAlias(token)) {
+			graphQltoken.setAlias(StreamUtil.nullIfEmpty(new String(token.getValue())));
+			token = StreamUtil.readUntilPunctuator(reader);
+		}
 		
 		Util.assertContains(TokenUtil.TOKEN_VALUE_TERMINATORS, token.getType());
 
