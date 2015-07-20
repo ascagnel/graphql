@@ -30,7 +30,7 @@ public class StreamUtil {
 		
 		while ((nextInt = reader.read()) != -1) {
 			char nextChar = (char) nextInt;
-			
+	
 			tokenType = Punctuator.fromValue(nextChar);
 			
 			// We have a token

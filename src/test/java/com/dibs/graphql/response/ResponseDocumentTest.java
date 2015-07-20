@@ -2,9 +2,12 @@ package com.dibs.graphql.response;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import javax.json.Json;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +16,10 @@ import com.dibs.graphql.breakroom.data.BreakRoom;
 import com.dibs.graphql.breakroom.data.VendingMachine;
 import com.dibs.graphql.data.Query;
 import com.dibs.graphql.data.QueryBuilder;
+import com.dibs.graphql.data.Response;
 import com.dibs.graphql.data.ResponseDocumentBuilder;
+import com.dibs.graphql.serialize.impl.ResponseSerializerImpl;
+import com.google.gson.JsonObject;
 
 public class ResponseDocumentTest {
 
@@ -61,7 +67,7 @@ public class ResponseDocumentTest {
 	}
 	
 	@Test
-	public void test() {
+	public void test() throws IOException {
 		ResponseDocumentBuilder document = new ResponseDocumentBuilder(buildFullyInflatedBreakRoom());
 		document.addFromBean(breakRoom);
 		
@@ -71,8 +77,10 @@ public class ResponseDocumentTest {
 		assertNotNull(data.get("name"));
 		assertNotNull(data.get("vendingMachines"));
 		assertNotNull(((Map)((List)data.get("vendingMachines")).get(0)).get("id"));
-
-
-
+		
+		Response response = new Response();
+		response.setData(data);
+		ResponseSerializerImpl serializer = new ResponseSerializerImpl();
+		serializer.serialize(response, null);
 	}
 }
