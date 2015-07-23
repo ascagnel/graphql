@@ -21,15 +21,9 @@ public class GraphQLMessageConverter extends AbstractHttpMessageConverter<Query>
 	
 	public static final MediaType APPLICATION_GRAPHQL = new MediaType("application/graphql");
 	
-	private static final QueryDeserializer DEFAULT_DESERIALIZER = new QueryDeserializerStackImpl();
 	private static final QuerySerializer DEFAULT_SERIALIZER = new QuerySerializerImpl();
 	
-	private QueryDeserializer deserializer = DEFAULT_DESERIALIZER;
 	private QuerySerializer serializer = DEFAULT_SERIALIZER;
-	
-	public void setDeserializer(QueryDeserializer deserializer) {
-		this.deserializer = deserializer;
-	}
 
 	public void setSerializer(QuerySerializer serializer) {
 		this.serializer = serializer;
@@ -44,8 +38,10 @@ public class GraphQLMessageConverter extends AbstractHttpMessageConverter<Query>
 	protected Query readInternal(Class<? extends Query> arg0, HttpInputMessage arg1) throws IOException, HttpMessageNotReadableException {
 		InputStream body = arg1.getBody();
 		
+		QueryDeserializer deserializer = new QueryDeserializerStackImpl(body);
+		
 		try {
-			return deserializer.deserialize(body);		
+			return deserializer.deserialize();		
 		} catch (SerializationException e) {
 			throw new HttpMessageNotReadableException(e.getMessage(), e);
 		}

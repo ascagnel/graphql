@@ -14,7 +14,7 @@ public class QueryTestUtil {
 						"      height\n" + 
 						"    }, test (field : [abc, def, fg, 456]) {\n" + 
 						"		123 \n" + 
-						"    } " +
+						"    }\n" +
 						"  }\n" + 
 						"}";
 		

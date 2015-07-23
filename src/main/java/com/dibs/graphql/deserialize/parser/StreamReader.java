@@ -1,26 +1,50 @@
 package com.dibs.graphql.deserialize.parser;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.dibs.graphql.data.deserialize.TokenData;
 import com.dibs.graphql.data.deserialize.Punctuator;
+import com.dibs.graphql.data.deserialize.TokenData;
 
-public class StreamUtil {
-	private static final Log LOG = LogFactory.getLog(StreamUtil.class);
+public class StreamReader {
+	private static final Log LOG = LogFactory.getLog(StreamReader.class);
 	
 	private static final int DEFAULT_BUFFER_SIZE = 256;
 	
-	private static int bufferSize = DEFAULT_BUFFER_SIZE;
+	private int bufferSize = DEFAULT_BUFFER_SIZE;
 	
-	public static void setBufferSize(int bufferSize) {
-		StreamUtil.bufferSize = bufferSize;
+	private Reader reader;
+	private int lineNumber;
+	private int columnNumber;
+	
+	public StreamReader(InputStream inputStream) {
+		init(inputStream);
+	}
+	
+	public void setBufferSize(int bufferSize) {
+		this.bufferSize = bufferSize;
+	}
+	
+	public int getLineNumber() {
+		return lineNumber;
 	}
 
-	public static TokenData readUntilPunctuator(Reader reader) throws IOException {
+	public int getColumnNumber() {
+		return columnNumber;
+	}
+	
+	private void init(InputStream inputStream) {
+		reader = new InputStreamReader(inputStream);
+		lineNumber = 1;
+		columnNumber = 0;
+	}
+	
+	public TokenData readUntilPunctuator() throws IOException {
 		int nextInt;
 		
 		char[] buffer = new char[bufferSize];
@@ -31,6 +55,8 @@ public class StreamUtil {
 		while ((nextInt = reader.read()) != -1) {
 			char nextChar = (char) nextInt;
 	
+			updateStreamLocation(nextChar);
+			
 			tokenType = Punctuator.fromValue(nextChar);
 			
 			// We have a token
@@ -51,7 +77,11 @@ public class StreamUtil {
 		return token;
 	}
 	
-	public static char[] insertAndResize(char[] buffer, int index, char charToAppend) {
+	private boolean isNewline(char charToTest) {
+		return charToTest == '\n';
+	}
+	
+	private char[] insertAndResize(char[] buffer, int index, char charToAppend) {
 		char[] retVal = null;
 		
 		// If the index is greater than the size, double size and copy contents
@@ -69,7 +99,16 @@ public class StreamUtil {
 		
 		return retVal;
 	}
-
+	
+	private void updateStreamLocation(char curChar) {
+		if (isNewline(curChar)) {
+			lineNumber++;
+			columnNumber = 0;
+		} else {
+			columnNumber++;
+		}
+	}
+	
 	public static String nullIfEmpty(String input) {
 		if (input == null) {
 			return null;
@@ -82,5 +121,13 @@ public class StreamUtil {
 		}
 		
 		return trimmedInput;
+	}
+	
+	public boolean ready() throws IOException {
+		return reader.ready();
+	}
+	
+	public void close() throws IOException {
+		reader.close();
 	}
 }

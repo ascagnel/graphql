@@ -15,13 +15,12 @@ public class DeserializationTest {
 	
 	@Test
 	public void test() throws Exception {
-		QueryDeserializer parser = new QueryDeserializerStackImpl();
-		Query rootNode = parser.deserialize(new ByteArrayInputStream(QueryTestUtil.getUserString().getBytes()));
+		QueryDeserializer parser = new QueryDeserializerStackImpl(new ByteArrayInputStream(QueryTestUtil.getUserString().getBytes()));
+		Query rootNode = parser.deserialize();
 		
 		assertNotNull(rootNode);
 		assertEquals(1, rootNode.getSubQueries().size());
 		assertEquals("user", rootNode.getSubQueries().get(0).getName());
 		assertEquals(QueryTestUtil.buildUser(), rootNode);
-	}
-	
+	}	
 }

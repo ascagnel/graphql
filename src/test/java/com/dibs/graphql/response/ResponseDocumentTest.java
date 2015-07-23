@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.json.Json;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,7 +17,6 @@ import com.dibs.graphql.data.QueryBuilder;
 import com.dibs.graphql.data.Response;
 import com.dibs.graphql.data.ResponseDocumentBuilder;
 import com.dibs.graphql.serialize.impl.ResponseSerializerImpl;
-import com.google.gson.JsonObject;
 
 public class ResponseDocumentTest {
 
