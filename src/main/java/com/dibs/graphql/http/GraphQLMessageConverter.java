@@ -12,7 +12,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 
 import com.dibs.graphql.data.GraphQLData;
-import com.dibs.graphql.data.Query;
+import com.dibs.graphql.data.request.Query;
 import com.dibs.graphql.deserialize.Deserializer;
 import com.dibs.graphql.serialize.Serializer;
 

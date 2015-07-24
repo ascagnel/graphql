@@ -13,10 +13,10 @@ import org.junit.Test;
 
 import com.dibs.graphql.breakroom.data.BreakRoom;
 import com.dibs.graphql.breakroom.data.VendingMachine;
-import com.dibs.graphql.data.Query;
-import com.dibs.graphql.data.QueryBuilder;
-import com.dibs.graphql.data.Response;
-import com.dibs.graphql.data.ResponseDocumentBuilder;
+import com.dibs.graphql.data.request.Query;
+import com.dibs.graphql.data.request.QueryBuilder;
+import com.dibs.graphql.data.response.Response;
+import com.dibs.graphql.data.response.ResponseDocumentBuilder;
 import com.dibs.graphql.serialize.impl.ResponseSerializerGsonImpl;
 
 public class ResponseDocumentTest {

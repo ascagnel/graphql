@@ -2,7 +2,7 @@ package com.dibs.graphql.deserialize;
 
 import java.util.regex.Pattern;
 
-import com.dibs.graphql.data.deserialize.TokenData;
+import com.dibs.graphql.deserialize.data.TokenData;
 import com.dibs.graphql.deserialize.parser.StreamReader;
 
 public class TypeResolver {

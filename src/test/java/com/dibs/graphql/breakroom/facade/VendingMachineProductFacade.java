@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.dibs.graphql.breakroom.dao.VendingMachineProductDao;
 import com.dibs.graphql.breakroom.data.VendingMachineProduct;
-import com.dibs.graphql.data.QueryTree;
+import com.dibs.graphql.data.request.QueryTree;
 
 public interface VendingMachineProductFacade {
 

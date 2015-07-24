@@ -1,6 +1,8 @@
-package com.dibs.graphql.data;
+package com.dibs.graphql.data.response;
 
 import java.util.List;
+
+import com.dibs.graphql.data.GraphQLData;
 
 public class Response implements GraphQLData {
 	private static final long serialVersionUID = 5620028644346664264L;

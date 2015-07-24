@@ -1,5 +1,8 @@
 package com.dibs.graphql.data;
 
+import com.dibs.graphql.data.request.Query;
+import com.dibs.graphql.data.request.QueryBuilder;
+
 public class QueryTestUtil {
 
 	public static String getUserString() {

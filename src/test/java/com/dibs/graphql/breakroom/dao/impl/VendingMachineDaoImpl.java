@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.dibs.graphql.breakroom.dao.VendingMachineDao;
 import com.dibs.graphql.breakroom.data.VendingMachine;
-import com.dibs.graphql.data.QueryTree;
+import com.dibs.graphql.data.request.QueryTree;
 
 @Component
 public class VendingMachineDaoImpl implements VendingMachineDao {

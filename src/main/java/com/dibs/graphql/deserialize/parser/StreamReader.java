@@ -8,8 +8,8 @@ import java.io.Reader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.dibs.graphql.data.deserialize.Punctuator;
-import com.dibs.graphql.data.deserialize.TokenData;
+import com.dibs.graphql.deserialize.data.Punctuator;
+import com.dibs.graphql.deserialize.data.TokenData;
 
 public class StreamReader {
 	private static final Log LOG = LogFactory.getLog(StreamReader.class);

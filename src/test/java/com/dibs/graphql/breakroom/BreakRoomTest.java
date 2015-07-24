@@ -22,9 +22,9 @@ import com.dibs.graphql.breakroom.facade.VendingMachineProductFacade;
 import com.dibs.graphql.breakroom.facade.impl.BreakRoomFacadeImpl;
 import com.dibs.graphql.breakroom.facade.impl.VendingMachineFacadeImpl;
 import com.dibs.graphql.breakroom.facade.impl.VendingMachineProductFacadeImpl;
-import com.dibs.graphql.data.Query;
-import com.dibs.graphql.data.QueryBuilder;
-import com.dibs.graphql.data.QueryTree;
+import com.dibs.graphql.data.request.Query;
+import com.dibs.graphql.data.request.QueryBuilder;
+import com.dibs.graphql.data.request.QueryTree;
 
 
 public class BreakRoomTest {

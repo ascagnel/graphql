@@ -1,4 +1,4 @@
-package com.dibs.graphql.data;
+package com.dibs.graphql.data.response;
 
 import java.util.List;
 

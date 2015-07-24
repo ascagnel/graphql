@@ -7,7 +7,7 @@ import com.dibs.graphql.breakroom.data.BreakRoom;
 import com.dibs.graphql.breakroom.data.VendingMachine;
 import com.dibs.graphql.breakroom.facade.BreakRoomFacade;
 import com.dibs.graphql.breakroom.facade.VendingMachineFacade;
-import com.dibs.graphql.data.QueryTree;
+import com.dibs.graphql.data.request.QueryTree;
 import com.dibs.graphql.prune.FieldTrimmer;
 
 public class BreakRoomFacadeImpl implements BreakRoomFacade {

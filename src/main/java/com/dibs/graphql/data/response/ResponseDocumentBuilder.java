@@ -1,7 +1,10 @@
-package com.dibs.graphql.data;
+package com.dibs.graphql.data.response;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com.dibs.graphql.data.QueryBeanParser;
+import com.dibs.graphql.data.request.Query;
 
 public class ResponseDocumentBuilder {
 	

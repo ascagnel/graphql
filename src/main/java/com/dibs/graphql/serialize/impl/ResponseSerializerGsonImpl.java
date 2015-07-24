@@ -7,7 +7,7 @@ import java.io.OutputStreamWriter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.dibs.graphql.data.Response;
+import com.dibs.graphql.data.response.Response;
 import com.dibs.graphql.serialize.Serializer;
 import com.google.gson.Gson;
 

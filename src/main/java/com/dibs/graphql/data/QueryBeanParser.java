@@ -8,6 +8,8 @@ import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
 
+import com.dibs.graphql.data.request.Query;
+
 public class QueryBeanParser {
 	
 	public static Map<String, Object> parse(Query query, Object bean) {

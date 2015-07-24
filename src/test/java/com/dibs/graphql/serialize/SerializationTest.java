@@ -7,8 +7,8 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import com.dibs.graphql.data.Query;
 import com.dibs.graphql.data.QueryTestUtil;
+import com.dibs.graphql.data.request.Query;
 import com.dibs.graphql.serialize.impl.QuerySerializerImpl;
 
 public class SerializationTest {

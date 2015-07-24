@@ -1,6 +1,6 @@
 package com.dibs.graphql.deserialize;
 
-import com.dibs.graphql.data.Query;
+import com.dibs.graphql.data.request.Query;
 
 public interface QueryDeserializer {
 

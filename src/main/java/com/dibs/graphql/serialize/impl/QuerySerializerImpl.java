@@ -10,8 +10,8 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.dibs.graphql.data.Query;
-import com.dibs.graphql.data.deserialize.Punctuator;
+import com.dibs.graphql.data.request.Query;
+import com.dibs.graphql.deserialize.data.Punctuator;
 import com.dibs.graphql.serialize.Serializer;
 
 public class QuerySerializerImpl implements Serializer<Query> {

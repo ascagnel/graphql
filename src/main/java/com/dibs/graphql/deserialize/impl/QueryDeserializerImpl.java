@@ -9,11 +9,11 @@ import java.util.Stack;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.dibs.graphql.data.Query;
-import com.dibs.graphql.data.QueryBuilder;
-import com.dibs.graphql.data.deserialize.Punctuator;
-import com.dibs.graphql.data.deserialize.QueryToken;
+import com.dibs.graphql.data.request.Query;
+import com.dibs.graphql.data.request.QueryBuilder;
 import com.dibs.graphql.deserialize.Deserializer;
+import com.dibs.graphql.deserialize.data.Punctuator;
+import com.dibs.graphql.deserialize.data.QueryToken;
 import com.dibs.graphql.deserialize.parser.StreamReader;
 import com.dibs.graphql.deserialize.parser.impl.ArgumentParser;
 import com.dibs.graphql.deserialize.parser.impl.QueryTokenParser;

@@ -5,8 +5,8 @@ import java.io.IOException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.dibs.graphql.data.deserialize.QueryToken;
-import com.dibs.graphql.data.deserialize.TokenData;
+import com.dibs.graphql.deserialize.data.QueryToken;
+import com.dibs.graphql.deserialize.data.TokenData;
 import com.dibs.graphql.deserialize.parser.StreamReader;
 import com.dibs.graphql.deserialize.parser.TokenParser;
 import com.dibs.graphql.deserialize.parser.TokenUtil;
