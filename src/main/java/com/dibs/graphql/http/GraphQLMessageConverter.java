@@ -2,6 +2,7 @@ package com.dibs.graphql.http;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
@@ -10,23 +11,24 @@ import org.springframework.http.converter.AbstractHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 
+import com.dibs.graphql.data.GraphQLData;
 import com.dibs.graphql.data.Query;
-import com.dibs.graphql.deserialize.QueryDeserializer;
-import com.dibs.graphql.deserialize.SerializationException;
-import com.dibs.graphql.deserialize.impl.QueryDeserializerStackImpl;
-import com.dibs.graphql.serialize.QuerySerializer;
-import com.dibs.graphql.serialize.impl.QuerySerializerImpl;
+import com.dibs.graphql.deserialize.Deserializer;
+import com.dibs.graphql.serialize.Serializer;
 
-public class GraphQLMessageConverter extends AbstractHttpMessageConverter<Query> {
+public class GraphQLMessageConverter extends AbstractHttpMessageConverter<GraphQLData> {
 	
 	public static final MediaType APPLICATION_GRAPHQL = new MediaType("application/graphql");
 	
-	private static final QuerySerializer DEFAULT_SERIALIZER = new QuerySerializerImpl();
-	
-	private QuerySerializer serializer = DEFAULT_SERIALIZER;
+	private Map<Class<?>, Serializer<? extends GraphQLData>> serializers;
+	private Map<Class<?>, Deserializer<? extends GraphQLData>> deserializers;
 
-	public void setSerializer(QuerySerializer serializer) {
-		this.serializer = serializer;
+	public void setSerializers(Map<Class<?>, Serializer<? extends GraphQLData>> serializers) {
+		this.serializers = serializers;
+	}
+
+	public void setDeserializers(Map<Class<?>, Deserializer<? extends GraphQLData>> deserializers) {
+		this.deserializers = deserializers;
 	}
 
 	@Override
@@ -34,17 +36,25 @@ public class GraphQLMessageConverter extends AbstractHttpMessageConverter<Query>
 		return APPLICATION_GRAPHQL.equals(arg0);
 	};
 	
+	protected Deserializer<? extends GraphQLData> determineDeserializer(Class<? extends GraphQLData> clazz) {
+		return deserializers.get(clazz);
+	}
+	
+	protected Serializer<? extends GraphQLData> determineSerializer(Class<? extends GraphQLData> clazz) {
+		return serializers.get(clazz);
+	}
+	
 	@Override
-	protected Query readInternal(Class<? extends Query> arg0, HttpInputMessage arg1) throws IOException, HttpMessageNotReadableException {
+	protected GraphQLData readInternal(Class<? extends GraphQLData> arg0, HttpInputMessage arg1) throws IOException, HttpMessageNotReadableException {
+		Deserializer<? extends GraphQLData> deserializer = determineDeserializer(arg0);
+		
+		if (deserializer == null) {
+			throw new RuntimeException("Could not determine deserializer for class [" + arg0 + "]");
+		}
+		
 		InputStream body = arg1.getBody();
 		
-		QueryDeserializer deserializer = new QueryDeserializerStackImpl(body);
-		
-		try {
-			return deserializer.deserialize();		
-		} catch (SerializationException e) {
-			throw new HttpMessageNotReadableException(e.getMessage(), e);
-		}
+		return deserializer.deserialize(body);	
 	}
 
 	@Override
@@ -52,12 +62,15 @@ public class GraphQLMessageConverter extends AbstractHttpMessageConverter<Query>
 		return Query.class.isAssignableFrom(arg0);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	protected void writeInternal(Query arg0, HttpOutputMessage arg1) throws IOException, HttpMessageNotWritableException {	
-		try {
-			serializer.serialize(arg1.getBody(), arg0, false);
-		} catch (SerializationException e) {
-			throw new HttpMessageNotReadableException(e.getMessage(), e);
+	protected void writeInternal(GraphQLData arg0, HttpOutputMessage arg1) throws IOException, HttpMessageNotWritableException {	
+		Serializer<GraphQLData> serializer = (Serializer<GraphQLData>) determineSerializer(arg0.getClass());
+		
+		if (serializer == null) {
+			throw new RuntimeException("Could not determine serializer for class [" + arg0 + "]");
 		}
+		
+		serializer.serialize(arg1.getBody(), arg0);
 	}
 }

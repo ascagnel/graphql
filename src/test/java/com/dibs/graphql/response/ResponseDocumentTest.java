@@ -2,6 +2,7 @@ package com.dibs.graphql.response;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ import com.dibs.graphql.data.Query;
 import com.dibs.graphql.data.QueryBuilder;
 import com.dibs.graphql.data.Response;
 import com.dibs.graphql.data.ResponseDocumentBuilder;
-import com.dibs.graphql.serialize.impl.ResponseSerializerImpl;
+import com.dibs.graphql.serialize.impl.ResponseSerializerGsonImpl;
 
 public class ResponseDocumentTest {
 
@@ -40,7 +41,7 @@ public class ResponseDocumentTest {
 		breakRoom.setVendingMachines(vendingMachines);
 	}
 	
-	private Query buildFullyInflatedBreakRoom() {
+	private Query buildFullyInflatedBreakRoomQuery() {
 		Query breakRoom = 
 			new QueryBuilder()
 						.subQuery(new QueryBuilder().name("id").build())
@@ -65,7 +66,7 @@ public class ResponseDocumentTest {
 	
 	@Test
 	public void test() throws IOException {
-		ResponseDocumentBuilder document = new ResponseDocumentBuilder(buildFullyInflatedBreakRoom());
+		ResponseDocumentBuilder document = new ResponseDocumentBuilder(buildFullyInflatedBreakRoomQuery());
 		document.addFromBean(breakRoom);
 		
 		Map<String, Object> data = document.getData();
@@ -77,7 +78,8 @@ public class ResponseDocumentTest {
 		
 		Response response = new Response();
 		response.setData(data);
-		ResponseSerializerImpl serializer = new ResponseSerializerImpl();
-		serializer.serialize(response, null);
+		
+		ResponseSerializerGsonImpl serializer = new ResponseSerializerGsonImpl();
+		serializer.serialize(new ByteArrayOutputStream(), response);
 	}
 }

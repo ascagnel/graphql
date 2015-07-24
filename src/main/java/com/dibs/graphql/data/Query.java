@@ -7,7 +7,9 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
-public class Query {
+public class Query implements GraphQLData {
+	private static final long serialVersionUID = 1538389836000146470L;
+	
 	private String name;
 	private String alias;
 	private List<Query> subQueries;

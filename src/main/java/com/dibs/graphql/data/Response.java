@@ -1,12 +1,12 @@
 package com.dibs.graphql.data;
 
 import java.util.List;
-import java.util.Map;
 
-public class Response {
-
+public class Response implements GraphQLData {
+	private static final long serialVersionUID = 5620028644346664264L;
+	
 	private List<Error> errors;
-	private Map<String, Object> data;
+	private Object data;
 	private Throwable exception;
 	
 	public Response() {
@@ -20,11 +20,11 @@ public class Response {
 		this.errors = errors;
 	}
 
-	public Map<String, Object> getData() {
+	public Object getData() {
 		return data;
 	}
 	
-	public void setData(Map<String, Object> data) {
+	public void setData(Object data) {
 		this.data = data;
 	}
 

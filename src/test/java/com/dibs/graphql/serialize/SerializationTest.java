@@ -3,12 +3,12 @@ package com.dibs.graphql.serialize;
 import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 import org.junit.Test;
 
 import com.dibs.graphql.data.Query;
 import com.dibs.graphql.data.QueryTestUtil;
-import com.dibs.graphql.deserialize.SerializationException;
 import com.dibs.graphql.serialize.impl.QuerySerializerImpl;
 
 public class SerializationTest {
@@ -33,33 +33,28 @@ public class SerializationTest {
 					"}\n";
 						
 	@Test
-	public void testSerialize() throws SerializationException {
+	public void testSerialize() throws IOException {
 		Query userQuery = QueryTestUtil.buildUser();
 		
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		
-		QuerySerializer serializer = new QuerySerializerImpl();
-		serializer.serialize(outputStream, userQuery, false);
+		QuerySerializerImpl serializer = new QuerySerializerImpl();
+		serializer.setPrettyPrint(false);
+		serializer.serialize(outputStream, userQuery);
 		
 		String nonPrettyOutputString = outputStream.toString();
 		assertEquals(NON_PRETTY_SERIALIZED_USER, nonPrettyOutputString);
-		
-		outputStream = new ByteArrayOutputStream();
-
-		serializer.serialize(outputStream, userQuery, true);
-		
-		String prettyOutputString = outputStream.toString();
-		assertEquals(PRETTY_SERIALIZED_USER, prettyOutputString);	
 	}
 	
 	@Test
-	public void testSerializePrettyPrint() throws SerializationException {
+	public void testSerializePrettyPrint() throws IOException {
 		Query userQuery = QueryTestUtil.buildUser();
 
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-		QuerySerializer serializer = new QuerySerializerImpl();
-		serializer.serialize(outputStream, userQuery, true);
+		QuerySerializerImpl serializer = new QuerySerializerImpl();
+		serializer.setPrettyPrint(true);
+		serializer.serialize(outputStream, userQuery);
 		
 		String prettyOutputString = outputStream.toString();
 		assertEquals(PRETTY_SERIALIZED_USER, prettyOutputString);	

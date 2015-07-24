@@ -13,38 +13,29 @@ import com.dibs.graphql.data.Query;
 import com.dibs.graphql.data.QueryBuilder;
 import com.dibs.graphql.data.deserialize.Punctuator;
 import com.dibs.graphql.data.deserialize.QueryToken;
-import com.dibs.graphql.deserialize.QueryDeserializer;
-import com.dibs.graphql.deserialize.SerializationException;
+import com.dibs.graphql.deserialize.Deserializer;
 import com.dibs.graphql.deserialize.parser.StreamReader;
 import com.dibs.graphql.deserialize.parser.impl.ArgumentParser;
 import com.dibs.graphql.deserialize.parser.impl.QueryTokenParser;
 
-public class QueryDeserializerStackImpl implements QueryDeserializer {
-	private static final Log LOG = LogFactory.getLog(QueryDeserializerStackImpl.class);
+public class QueryDeserializerImpl implements Deserializer<Query> {
+	private static final Log LOG = LogFactory.getLog(QueryDeserializerImpl.class);
 	
-	private Stack<Query> nodes;
-		
-	private QueryTokenParser tokenParser;
-	private ArgumentParser argumentParser;
-	private StreamReader streamReader;
-	
-	public QueryDeserializerStackImpl(InputStream inputStream) {
-		init(inputStream);
+	public QueryDeserializerImpl() {
 	}
 	
-	private void init(InputStream inputStream) {
-		streamReader = new StreamReader(inputStream);
-		argumentParser = new ArgumentParser(streamReader);
-		tokenParser = new QueryTokenParser(argumentParser, streamReader);
-	}
-	
-	public Query deserialize() throws SerializationException {
+	@Override
+	public Query deserialize(InputStream inputStream) throws IOException {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Parsing GraphQL input stream");
 		}
 		
-		nodes = new Stack<>();
+		Stack<Query> nodes = new Stack<>();
 		
+		StreamReader streamReader = new StreamReader(inputStream);
+		ArgumentParser argumentParser = new ArgumentParser(streamReader);
+		QueryTokenParser tokenParser = new QueryTokenParser(argumentParser, streamReader);
+				
 		Query rootNode = null;
 		
 		try {			
@@ -86,14 +77,8 @@ public class QueryDeserializerStackImpl implements QueryDeserializer {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Finished parsing input stream, closing GraphQL token reader.");
 			}
-		} catch (IOException e) {
-			throw new SerializationException(e);
 		} finally {
-			try {
-				streamReader.close();
-			} catch (IOException e) {
-				throw new SerializationException(e);
-			}
+			streamReader.close();
 		}
 		
 		return rootNode;

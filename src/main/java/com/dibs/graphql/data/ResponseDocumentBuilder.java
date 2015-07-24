@@ -26,7 +26,6 @@ public class ResponseDocumentBuilder {
 		documentValues.putAll(beanValues);
 	}
 	
-	
 	public Map<String, Object> getData() {
 		return documentValues;
 	}
