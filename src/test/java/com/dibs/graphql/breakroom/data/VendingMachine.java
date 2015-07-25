@@ -8,7 +8,7 @@ public class VendingMachine {
 
 	public static final String ID_PROPERTY = "id";
 	private Integer id;
-	private int merchandiseCount;
+	private Integer merchandiseCount;
 	private String servicedBy;
 	
 	public static final String PRODUCTS_PROPERTY = "products";
@@ -25,11 +25,11 @@ public class VendingMachine {
 		this.id = id;
 	}
 
-	public int getMerchandiseCount() {
+	public Integer getMerchandiseCount() {
 		return merchandiseCount;
 	}
 
-	public void setMerchandiseCount(int merchandiseCount) {
+	public void setMerchandiseCount(Integer merchandiseCount) {
 		this.merchandiseCount = merchandiseCount;
 	}
 

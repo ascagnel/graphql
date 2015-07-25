@@ -1,6 +1,7 @@
 package com.dibs.graphql.response;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import org.junit.Test;
 
 import com.dibs.graphql.breakroom.data.BreakRoom;
 import com.dibs.graphql.breakroom.data.VendingMachine;
+import com.dibs.graphql.data.ResponseDataBuilder;
 import com.dibs.graphql.data.request.Query;
 import com.dibs.graphql.data.request.QueryBuilder;
 import com.dibs.graphql.data.response.Response;
@@ -64,8 +66,33 @@ public class ResponseDocumentTest {
 		return breakRoom;
 	}
 	
+	private Query buildPartiallyInflatedBreakRoomQuery() {
+		Query breakRoom = 
+			new QueryBuilder()
+						.subQuery(new QueryBuilder().name("id").build())
+						.subQuery(new QueryBuilder()
+							.name("vendingMachines")
+								.subQuery(new QueryBuilder().name("id").build())
+							.build())
+					.build();
+		
+		return breakRoom;
+	}
+	
 	@Test
-	public void test() throws IOException {
+	public void testBean() throws IOException {
+		ResponseDataBuilder.processBean(buildPartiallyInflatedBreakRoomQuery(), breakRoom);
+		
+		assertNotNull(breakRoom.getId());
+		assertNull(breakRoom.getName());
+		assertNotNull(breakRoom.getVendingMachines());
+		assertNotNull(breakRoom.getVendingMachines().get(0).getId());
+		assertNull(breakRoom.getVendingMachines().get(0).getMerchandiseCount());
+	}
+	
+	
+	@Test
+	public void testMap() throws IOException {
 		ResponseDocumentBuilder document = new ResponseDocumentBuilder(buildFullyInflatedBreakRoomQuery());
 		document.addFromBean(breakRoom);
 		
