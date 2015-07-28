@@ -2,8 +2,8 @@ package com.dibs.graphql.deserialize.parser;
 
 import java.util.Set;
 
-import com.dibs.graphql.data.deserialize.TokenData;
-import com.dibs.graphql.data.deserialize.Punctuator;
+import com.dibs.graphql.deserialize.data.Punctuator;
+import com.dibs.graphql.deserialize.data.TokenData;
 import com.dibs.graphql.util.Util;
 
 public class TokenUtil {

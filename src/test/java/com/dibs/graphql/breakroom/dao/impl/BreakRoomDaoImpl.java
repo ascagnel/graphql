@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 import com.dibs.graphql.breakroom.dao.BreakRoomDao;
 import com.dibs.graphql.breakroom.data.BreakRoom;
-import com.dibs.graphql.data.QueryTree;
+import com.dibs.graphql.data.request.QueryTree;
 
 @Component
 public class BreakRoomDaoImpl implements BreakRoomDao {

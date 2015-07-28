@@ -1,4 +1,4 @@
-package com.dibs.graphql.data.deserialize;
+package com.dibs.graphql.deserialize.data;
 
 
 public class TokenData {

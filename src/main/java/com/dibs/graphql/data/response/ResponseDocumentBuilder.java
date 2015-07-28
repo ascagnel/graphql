@@ -1,7 +1,10 @@
-package com.dibs.graphql.data;
+package com.dibs.graphql.data.response;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com.dibs.graphql.data.ResponseDataBuilder;
+import com.dibs.graphql.data.request.Query;
 
 public class ResponseDocumentBuilder {
 	
@@ -22,10 +25,9 @@ public class ResponseDocumentBuilder {
 	}
 	
 	public void addFromBean(Object bean) {
-		Map<String, Object> beanValues = QueryBeanParser.parse(query, bean);
+		Map<String, Object> beanValues = ResponseDataBuilder.buildMap(query, bean);
 		documentValues.putAll(beanValues);
 	}
-	
 	
 	public Map<String, Object> getData() {
 		return documentValues;

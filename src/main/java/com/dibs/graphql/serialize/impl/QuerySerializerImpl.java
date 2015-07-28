@@ -10,35 +10,46 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.dibs.graphql.data.Query;
-import com.dibs.graphql.data.deserialize.Punctuator;
-import com.dibs.graphql.deserialize.SerializationException;
-import com.dibs.graphql.serialize.QuerySerializer;
+import com.dibs.graphql.data.request.Query;
+import com.dibs.graphql.deserialize.data.Punctuator;
+import com.dibs.graphql.serialize.Serializer;
 
-public class QuerySerializerImpl implements QuerySerializer {
+public class QuerySerializerImpl implements Serializer<Query> {
 	private static final Log LOG = LogFactory.getLog(QuerySerializerImpl.class);
 	
 	private static final byte[] LINE_SEPARATOR = System.lineSeparator().getBytes();
 	private static final byte[] TAB = "\t".getBytes();
 	private static final byte[] SPACE = " ".getBytes();
 	
-	public void serialize(OutputStream stream, Query query, boolean isPrettyPrint) throws SerializationException {
+	private boolean isPrettyPrint;
+	
+	public QuerySerializerImpl() {
+		init();
+	}
+	
+	public void setPrettyPrint(boolean isPrettyPrint) {
+		this.isPrettyPrint = isPrettyPrint;
+	}
+
+	private void init() {
+		isPrettyPrint = false;
+	}
+	
+	@Override
+	public void serialize(OutputStream stream, Query query) throws IOException {
 		if (LOG.isTraceEnabled()) {
 			LOG.trace("Starting query serialization");
 		}
 		
-		try {
-			writeQuery(stream, query, 0, isPrettyPrint, true);
-		} catch(Exception e) {
-			throw new SerializationException(e);
-		}
+		writeQuery(stream, query, 0, true);
 			
 		if (LOG.isTraceEnabled()) {
 			LOG.trace("Finished query serialization");
 		}
 	}
 	
-	private void writeArguments(OutputStream stream, Query query, boolean isPrettyPrint) throws IOException {
+	
+	private void writeArguments(OutputStream stream, Query query) throws IOException {
 		if (isPrettyPrint) {
 			stream.write(SPACE);
 		}
@@ -74,8 +85,7 @@ public class QuerySerializerImpl implements QuerySerializer {
 		stream.write(Punctuator.CLOSE_PAREN.getValue());
 	}
 	
-	private void writeQuery(OutputStream stream, Query query, int depth, boolean isPrettyPrint, boolean isLastChild) throws IOException {	
-
+	private void writeQuery(OutputStream stream, Query query, int depth, boolean isLastChild) throws IOException {	
 		if (isPrettyPrint) {
 			indent(stream, depth);
 		}
@@ -94,7 +104,7 @@ public class QuerySerializerImpl implements QuerySerializer {
 		}
 		
 		if (query.getArguments() != null) {
-			writeArguments(stream, query, isPrettyPrint);
+			writeArguments(stream, query);
 		}
 		
 		List<Query> subQueries = query.getSubQueries();
@@ -115,7 +125,7 @@ public class QuerySerializerImpl implements QuerySerializer {
 			for (int i = 0; i < subQueryCount; i++) {
 				boolean isLastSubQuery = (i == (subQueryCount - 1));
 				
-				writeQuery(stream, subQueries.get(i), depth + 1, isPrettyPrint, isLastSubQuery);
+				writeQuery(stream, subQueries.get(i), depth + 1, isLastSubQuery);
 			}
 			
 			if (isPrettyPrint) {

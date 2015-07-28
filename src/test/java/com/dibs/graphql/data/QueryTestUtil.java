@@ -1,5 +1,8 @@
 package com.dibs.graphql.data;
 
+import com.dibs.graphql.data.request.Query;
+import com.dibs.graphql.data.request.QueryBuilder;
+
 public class QueryTestUtil {
 
 	public static String getUserString() {
@@ -14,7 +17,7 @@ public class QueryTestUtil {
 						"      height\n" + 
 						"    }, test (field : [abc, def, fg, 456]) {\n" + 
 						"		123 \n" + 
-						"    } " +
+						"    }\n" +
 						"  }\n" + 
 						"}";
 		

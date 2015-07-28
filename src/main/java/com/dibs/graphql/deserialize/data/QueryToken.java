@@ -1,6 +1,6 @@
-package com.dibs.graphql.data.deserialize;
+package com.dibs.graphql.deserialize.data;
 
-import com.dibs.graphql.data.Arguments;
+import com.dibs.graphql.data.request.Arguments;
 
 public class QueryToken {
 	

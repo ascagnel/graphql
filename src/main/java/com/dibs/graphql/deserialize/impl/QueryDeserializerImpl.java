@@ -9,39 +9,38 @@ import java.util.Stack;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.dibs.graphql.data.Query;
-import com.dibs.graphql.data.QueryBuilder;
-import com.dibs.graphql.data.deserialize.QueryToken;
-import com.dibs.graphql.data.deserialize.Punctuator;
-import com.dibs.graphql.deserialize.QueryDeserializer;
-import com.dibs.graphql.deserialize.SerializationException;
-import com.dibs.graphql.deserialize.parser.QueryTokenParser;
-import com.dibs.graphql.deserialize.parser.impl.StreamingQueryTokenParser;
+import com.dibs.graphql.data.request.Query;
+import com.dibs.graphql.data.request.QueryBuilder;
+import com.dibs.graphql.deserialize.Deserializer;
+import com.dibs.graphql.deserialize.data.Punctuator;
+import com.dibs.graphql.deserialize.data.QueryToken;
+import com.dibs.graphql.deserialize.parser.StreamReader;
+import com.dibs.graphql.deserialize.parser.impl.ArgumentParser;
+import com.dibs.graphql.deserialize.parser.impl.QueryTokenParser;
 
-public class QueryDeserializerStackImpl implements QueryDeserializer {
-	private static final Log LOG = LogFactory.getLog(QueryDeserializerStackImpl.class);
+public class QueryDeserializerImpl implements Deserializer<Query> {
+	private static final Log LOG = LogFactory.getLog(QueryDeserializerImpl.class);
 	
-	private Stack<Query> nodes;
-	
-	private QueryTokenParser tokenReader;
-	
-	public QueryDeserializerStackImpl() {
+	public QueryDeserializerImpl() {
 	}
 	
-	public Query deserialize(InputStream inputStream) throws SerializationException {
+	@Override
+	public Query deserialize(InputStream inputStream) throws IOException {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Parsing GraphQL input stream");
 		}
 		
-		nodes = new Stack<>();
+		Stack<Query> nodes = new Stack<>();
 		
+		StreamReader streamReader = new StreamReader(inputStream);
+		ArgumentParser argumentParser = new ArgumentParser(streamReader);
+		QueryTokenParser tokenParser = new QueryTokenParser(argumentParser, streamReader);
+				
 		Query rootNode = null;
 		
-		try {
-			tokenReader = new StreamingQueryTokenParser(inputStream);
-			
-			while (tokenReader.hasNext()) {
-				QueryToken token = tokenReader.next();
+		try {			
+			while (streamReader.ready()) {
+				QueryToken token = tokenParser.next();
 				
 				Query node = new QueryBuilder()
 					.name(token.getValue())
@@ -78,15 +77,10 @@ public class QueryDeserializerStackImpl implements QueryDeserializer {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Finished parsing input stream, closing GraphQL token reader.");
 			}
-		} catch (IOException e) {
-			throw new SerializationException(e);
 		} finally {
-			try {
-				tokenReader.close();
-			} catch (IOException e) {
-				throw new SerializationException(e);
-			}
+			streamReader.close();
 		}
+		
 		return rootNode;
 	}
 	

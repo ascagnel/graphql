@@ -1,4 +1,4 @@
-package com.dibs.graphql.data;
+package com.dibs.graphql.data.request;
 
 import java.util.List;
 
@@ -7,7 +7,11 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
-public class Query {
+import com.dibs.graphql.data.GraphQLData;
+
+public class Query implements GraphQLData {
+	private static final long serialVersionUID = 1538389836000146470L;
+	
 	private String name;
 	private String alias;
 	private List<Query> subQueries;

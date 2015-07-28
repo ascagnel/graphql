@@ -2,8 +2,8 @@ package com.dibs.graphql.deserialize;
 
 import java.util.regex.Pattern;
 
-import com.dibs.graphql.data.deserialize.TokenData;
-import com.dibs.graphql.deserialize.parser.StreamUtil;
+import com.dibs.graphql.deserialize.data.TokenData;
+import com.dibs.graphql.deserialize.parser.StreamReader;
 
 public class TypeResolver {
 	
@@ -35,7 +35,7 @@ public class TypeResolver {
 	}
 		
 	public static Object rawDataToTypedValue(TokenData tokenData) {
-		String value = StreamUtil.nullIfEmpty(new String(tokenData.getValue()));
+		String value = StreamReader.nullIfEmpty(new String(tokenData.getValue()));
 		return resolveArgumentToType(value);
 	}
 	
@@ -43,7 +43,7 @@ public class TypeResolver {
 		String[] values = new String[tokenData.length];
 		
 		for (int i = 0; i < tokenData.length; i++) {
-			values[i] = StreamUtil.nullIfEmpty(new String(tokenData[i].getValue()));
+			values[i] = StreamReader.nullIfEmpty(new String(tokenData[i].getValue()));
 		}
 		
 		Object[] unmatchedTypes = new Object[values.length];
