@@ -14,11 +14,11 @@ import org.junit.Test;
 
 import com.dibs.graphql.breakroom.data.BreakRoom;
 import com.dibs.graphql.breakroom.data.VendingMachine;
-import com.dibs.graphql.data.ResponseDataBuilder;
 import com.dibs.graphql.data.request.Query;
 import com.dibs.graphql.data.request.QueryBuilder;
 import com.dibs.graphql.data.response.Response;
-import com.dibs.graphql.data.response.ResponseDocumentBuilder;
+import com.dibs.graphql.response.processor.impl.QueryResponseBeanDataProcessor;
+import com.dibs.graphql.response.processor.impl.QueryResponseMapDataProcessor;
 import com.dibs.graphql.serialize.impl.ResponseSerializerGsonImpl;
 
 public class ResponseDocumentTest {
@@ -81,22 +81,20 @@ public class ResponseDocumentTest {
 	
 	@Test
 	public void testBean() throws IOException {
-		ResponseDataBuilder.processBean(buildPartiallyInflatedBreakRoomQuery(), breakRoom);
+		BreakRoom responseBreakRoom = new QueryResponseBeanDataProcessor<BreakRoom>(buildPartiallyInflatedBreakRoomQuery()).process(breakRoom);
 		
-		assertNotNull(breakRoom.getId());
-		assertNull(breakRoom.getName());
-		assertNotNull(breakRoom.getVendingMachines());
-		assertNotNull(breakRoom.getVendingMachines().get(0).getId());
-		assertNull(breakRoom.getVendingMachines().get(0).getMerchandiseCount());
+		assertNotNull(responseBreakRoom.getId());
+		assertNull(responseBreakRoom.getName());
+		assertNotNull(responseBreakRoom.getVendingMachines());
+		assertNotNull(responseBreakRoom.getVendingMachines().get(0).getId());
+		assertNull(responseBreakRoom.getVendingMachines().get(0).getMerchandiseCount());
 	}
 	
 	
+	@SuppressWarnings("rawtypes")
 	@Test
-	public void testMap() throws IOException {
-		ResponseDocumentBuilder document = new ResponseDocumentBuilder(buildFullyInflatedBreakRoomQuery());
-		document.addFromBean(breakRoom);
-		
-		Map<String, Object> data = document.getData();
+	public void testMap() throws IOException {	
+		Map<String, Object> data = new QueryResponseMapDataProcessor(buildFullyInflatedBreakRoomQuery()).process(breakRoom);
 		
 		assertNotNull(data.get("id"));
 		assertNotNull(data.get("name"));

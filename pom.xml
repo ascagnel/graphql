@@ -3,9 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dibs</groupId>
 	<artifactId>graphql</artifactId>
-	<version>0.1.0</version>
+	<version>0.2.0</version>
 	<packaging>jar</packaging>
-	<name>shared-util</name>
+	<name>graphql</name>
 	<scm>
 		<connection>scm:git:git@github.com\:1stdibs/graphql.git</connection>
 		<url>scm:git:git@github.com\:1stdibs/graphql.git</url>
