@@ -68,20 +68,38 @@ public class DeserializationExceptionPayload {
 	
 	public String buildMessage() {
 		StringBuffer buffer = new StringBuffer();
-		buffer.append("Error Location: ");
+		
+		// Error Message
+		buffer.append("Error Message: [");
+		buffer.append(message);
+		buffer.append("], ");
+		
+		// Line Number
 		buffer.append("Line Number: [");
 		buffer.append(lineNumber);
 		buffer.append("], ");
+		
+		// Column Number
 		buffer.append("Column Number: [");
 		buffer.append(columnNumber);
 		buffer.append("], ");
+		
+		// Last Token
 		buffer.append("Last Token: [");
-		buffer.append(new String(lastToken.getValue()).trim());
+		if (lastToken != null) {
+			if (lastToken.getValue() != null) {
+				buffer.append(new String(lastToken.getValue()).trim());
+			}
+			
+			if (lastToken.getType() != null) {
+				buffer.append(lastToken.getType().getValue());
+			}
+		}
 		buffer.append("], ");
 		
-		if (path != null) {
-			buffer.append("Path: [");
-			
+		// Path
+		buffer.append("Path: [");
+		if (path != null) {			
 			if (!path.isEmpty()) {
 				for (Query query: path) {
 					buffer.append(query.getName());
@@ -89,11 +107,9 @@ public class DeserializationExceptionPayload {
 				}
 				
 				buffer.setLength(buffer.length() - 1);
-			}
-			
-			
-			buffer.append("]");
+			}			
 		}
+		buffer.append("]");
 		
 		return buffer.toString();
 	}

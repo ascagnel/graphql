@@ -10,6 +10,6 @@ public class DeserializationExceptionPayloadFactory {
 		payload.setColumnNumber(provider.getColumnNumber());
 		payload.setLastToken(provider.getLastReadToken());
 		
-		return new DeserializationExceptionPayload();
+		return payload;
 	}
 }
