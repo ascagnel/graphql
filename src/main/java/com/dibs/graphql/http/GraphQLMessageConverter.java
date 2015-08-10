@@ -13,6 +13,7 @@ import org.springframework.http.converter.HttpMessageNotWritableException;
 
 import com.dibs.graphql.data.GraphQLData;
 import com.dibs.graphql.data.request.Query;
+import com.dibs.graphql.deserialize.DeserializationException;
 import com.dibs.graphql.deserialize.Deserializer;
 import com.dibs.graphql.serialize.Serializer;
 
@@ -54,7 +55,11 @@ public class GraphQLMessageConverter extends AbstractHttpMessageConverter<GraphQ
 		
 		InputStream body = arg1.getBody();
 		
-		return deserializer.deserialize(body);	
+		try {
+			return deserializer.deserialize(body);
+		} catch (DeserializationException e) {
+			throw new HttpMessageNotReadableException(e.getMessage(), e);
+		}
 	}
 
 	@Override

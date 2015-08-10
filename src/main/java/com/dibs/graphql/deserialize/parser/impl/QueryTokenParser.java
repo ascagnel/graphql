@@ -5,12 +5,13 @@ import java.io.IOException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.dibs.graphql.deserialize.DeserializationException;
 import com.dibs.graphql.deserialize.data.QueryToken;
 import com.dibs.graphql.deserialize.data.TokenData;
 import com.dibs.graphql.deserialize.parser.StreamReader;
 import com.dibs.graphql.deserialize.parser.TokenParser;
 import com.dibs.graphql.deserialize.parser.TokenUtil;
-import com.dibs.graphql.util.Util;
+import com.dibs.graphql.deserialize.parser.validation.QueryValidationUtil;
 
 public class QueryTokenParser implements TokenParser<QueryToken> {
 	private static final Log LOG = LogFactory.getLog(QueryTokenParser.class);
@@ -31,7 +32,11 @@ public class QueryTokenParser implements TokenParser<QueryToken> {
 		this.argumentParser = argumentParser;
 	}
 	
-	public QueryToken next() throws IOException {
+	public StreamReader getStreamReader() {
+		return streamReader;
+	}
+	
+	public QueryToken next() throws IOException, DeserializationException {
 		QueryToken graphQltoken = new QueryToken();
 
 		TokenData token = streamReader.readUntilPunctuator();
@@ -41,7 +46,7 @@ public class QueryTokenParser implements TokenParser<QueryToken> {
 			token = streamReader.readUntilPunctuator();
 		}
 		
-		Util.assertContains(TokenUtil.TOKEN_VALUE_TERMINATORS, token.getType());
+		QueryValidationUtil.validatePunctuator(TokenUtil.TOKEN_VALUE_TERMINATORS, token.getType(), streamReader);
 
 		// Token value (property name) is going to be the first value that comes back if it exists
 		String graphQLTokenValue = StreamReader.nullIfEmpty(new String(token.getValue()));
