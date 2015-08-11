@@ -5,5 +5,5 @@ import java.io.InputStream;
 
 public interface Deserializer<D> {
 
-	public D deserialize(InputStream inputStream) throws IOException;
+	public D deserialize(InputStream inputStream) throws IOException, DeserializationException;
 }

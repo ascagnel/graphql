@@ -8,19 +8,20 @@ import java.io.Reader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.dibs.graphql.deserialize.DeserializationException;
+import com.dibs.graphql.deserialize.InputMessageLocationDataProvider;
 import com.dibs.graphql.deserialize.data.Punctuator;
 import com.dibs.graphql.deserialize.data.TokenData;
 
-public class StreamReader {
+public class StreamReader implements InputMessageLocationDataProvider {
 	private static final Log LOG = LogFactory.getLog(StreamReader.class);
-	
 	private static final int DEFAULT_BUFFER_SIZE = 256;
 	
 	private int bufferSize = DEFAULT_BUFFER_SIZE;
-	
 	private Reader reader;
 	private int lineNumber;
 	private int columnNumber;
+	private TokenData lastReadToken;
 	
 	public StreamReader(InputStream inputStream) {
 		init(inputStream);
@@ -30,12 +31,19 @@ public class StreamReader {
 		this.bufferSize = bufferSize;
 	}
 	
-	public int getLineNumber() {
+	@Override
+	public Integer getLineNumber() {
 		return lineNumber;
 	}
 
-	public int getColumnNumber() {
+	@Override
+	public Integer getColumnNumber() {
 		return columnNumber;
+	}
+	
+	@Override
+	public TokenData getLastReadToken() {
+		return lastReadToken;
 	}
 	
 	private void init(InputStream inputStream) {
@@ -44,7 +52,7 @@ public class StreamReader {
 		columnNumber = 0;
 	}
 	
-	public TokenData readUntilPunctuator() throws IOException {
+	public TokenData readUntilPunctuator() throws IOException, DeserializationException {
 		int nextInt;
 		
 		char[] buffer = new char[bufferSize];
@@ -73,6 +81,8 @@ public class StreamReader {
 		if (LOG.isDebugEnabled()) {
 			LOG.trace("Returning read values buffer: [" + new String(buffer) + "] tokenType [" + tokenType + "]");
 		}
+		
+		lastReadToken = token;
 		
 		return token;
 	}

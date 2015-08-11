@@ -11,6 +11,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.dibs.graphql.data.request.Query;
 import com.dibs.graphql.data.request.QueryBuilder;
+import com.dibs.graphql.deserialize.DeserializationException;
 import com.dibs.graphql.deserialize.Deserializer;
 import com.dibs.graphql.deserialize.data.Punctuator;
 import com.dibs.graphql.deserialize.data.QueryToken;
@@ -25,7 +26,7 @@ public class QueryDeserializerImpl implements Deserializer<Query> {
 	}
 	
 	@Override
-	public Query deserialize(InputStream inputStream) throws IOException {
+	public Query deserialize(InputStream inputStream) throws IOException, DeserializationException {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Parsing GraphQL input stream");
 		}
@@ -77,6 +78,9 @@ public class QueryDeserializerImpl implements Deserializer<Query> {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Finished parsing input stream, closing GraphQL token reader.");
 			}
+		} catch (DeserializationException e) {
+			e.getPayload().setPath(nodes);
+			throw e;
 		} finally {
 			streamReader.close();
 		}

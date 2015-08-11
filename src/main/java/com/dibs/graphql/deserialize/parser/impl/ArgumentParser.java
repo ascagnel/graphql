@@ -8,12 +8,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.dibs.graphql.data.request.Arguments;
+import com.dibs.graphql.deserialize.DeserializationException;
 import com.dibs.graphql.deserialize.TypeResolver;
 import com.dibs.graphql.deserialize.data.TokenData;
 import com.dibs.graphql.deserialize.parser.StreamReader;
 import com.dibs.graphql.deserialize.parser.TokenParser;
 import com.dibs.graphql.deserialize.parser.TokenUtil;
-import com.dibs.graphql.util.Util;
+import com.dibs.graphql.deserialize.parser.validation.QueryValidationUtil;
 
 public class ArgumentParser implements TokenParser<Arguments>{
 
@@ -28,7 +29,11 @@ public class ArgumentParser implements TokenParser<Arguments>{
 		this.streamReader = streamReader;
 	}
 
-	public Arguments next() throws IOException {
+	public StreamReader getStreamReader() {
+		return streamReader;
+	}
+	
+	public Arguments next() throws IOException, DeserializationException {
 		if (streamReader == null) {
 			throw new RuntimeException("A StreamReader must be set to parse arguments");
 		}
@@ -40,7 +45,8 @@ public class ArgumentParser implements TokenParser<Arguments>{
 		
 		for (boolean reachedArgumentTerminator = false; !reachedArgumentTerminator; reachedArgumentTerminator = TokenUtil.isAttributeTerminator(argumentValueData)) {
 			argumentKeyData = streamReader.readUntilPunctuator();
-			Util.assertContains(TokenUtil.ARGUMENT_KEY_TERMINATORS, argumentKeyData.getType());
+			
+			QueryValidationUtil.validatePunctuator(TokenUtil.ARGUMENT_KEY_TERMINATORS, argumentKeyData.getType(), streamReader);
 			
 			Object typedArgumentValue = null;
 			
@@ -59,7 +65,7 @@ public class ArgumentParser implements TokenParser<Arguments>{
 				typedArgumentValue = TypeResolver.rawDataToTypedValue(argumentValueData);
 			}
 			
-			Util.assertContains(TokenUtil.ARGUMENT_VALUE_TERMINATORS, argumentValueData.getType());
+			QueryValidationUtil.validatePunctuator(TokenUtil.ARGUMENT_VALUE_TERMINATORS, argumentValueData.getType(), streamReader);
 			
 			// Format the input to remove any leading/trailing whitespace
 			String argumentKey = StreamReader.nullIfEmpty(new String(argumentKeyData.getValue()));
