@@ -135,7 +135,12 @@ public class FieldTrimmer<I> {
 					MethodUtil methodUtil = MethodUtil.getInstance(bean, name);
 					if (methodUtil.isWriteLegit())
 					{
-						methodUtil.invokeWrite(bean, null);
+						//This is needed while trying to set null to primitive type values.
+						try {
+							methodUtil.invokeWrite(bean, null);
+						} catch (Exception e) {
+							LOG.warn("Unable to set null in "+methodUtil.getWriteMethod().getName());
+						}
 						LOG.trace("convert(): set " + field + " = null");
 					}
 				}

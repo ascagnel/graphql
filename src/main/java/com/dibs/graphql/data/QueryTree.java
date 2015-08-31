@@ -79,4 +79,8 @@ public class QueryTree {
 		
 		return provider;
 	}
+	
+	public Query getRootNode() {
+		return rootNode;
+	}
 }
