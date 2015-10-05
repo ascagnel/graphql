@@ -1,7 +1,7 @@
 package com.dibs.graphql.response.processor;
 
 
-public interface QueryResponseDataProcessor<T> {
+public interface QueryResponseDataProcessor {
 
-	public T process(Object bean);
+	public <T> T process(Object bean, Class<T> responseType);
 }

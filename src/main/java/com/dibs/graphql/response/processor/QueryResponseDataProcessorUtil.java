@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QueryResponseDataProcessorUtil {
-
-	public static <P, A> Iterable<P> processAll(QueryResponseDataProcessor<P> processor, Iterable<A> beans) {
+/*
+	public static <P, A> Iterable<P> processAll(QueryResponseProcessor processor, Iterable<A> beans) {
 		List<P> processedBeans = new ArrayList<>();
 		
 		for (A bean : beans) {
@@ -13,5 +13,5 @@ public class QueryResponseDataProcessorUtil {
 		}
 		
 		return processedBeans;
-	}
+	}*/
 }

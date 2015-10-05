@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNull;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,8 +18,17 @@ import com.dibs.graphql.breakroom.data.VendingMachine;
 import com.dibs.graphql.data.request.Query;
 import com.dibs.graphql.data.request.QueryBuilder;
 import com.dibs.graphql.data.response.Response;
-import com.dibs.graphql.response.processor.impl.QueryResponseBeanDataProcessor;
-import com.dibs.graphql.response.processor.impl.QueryResponseMapDataProcessor;
+import com.dibs.graphql.response.manager.QueryResponseTypeFactory;
+import com.dibs.graphql.response.manager.QueryResponseTypeManagerRegistry;
+import com.dibs.graphql.response.manager.QueryResponseTypeReader;
+import com.dibs.graphql.response.manager.QueryResponseTypeWriter;
+import com.dibs.graphql.response.manager.impl.QueryResponseTypeFactoryMapImpl;
+import com.dibs.graphql.response.manager.impl.QueryResponseTypeFactoryReflectionImpl;
+import com.dibs.graphql.response.manager.impl.QueryResponseTypeReaderBeanImpl;
+import com.dibs.graphql.response.manager.impl.QueryResponseTypeReaderMapImpl;
+import com.dibs.graphql.response.manager.impl.QueryResponseTypeWriterBeanImpl;
+import com.dibs.graphql.response.manager.impl.QueryResponseTypeWriterMapImpl;
+import com.dibs.graphql.response.processor.impl.QueryResponseProcessor;
 import com.dibs.graphql.serialize.impl.ResponseSerializerGsonImpl;
 
 public class ResponseDocumentTest {
@@ -41,6 +51,23 @@ public class ResponseDocumentTest {
 		vendingMachines.add(vendingMachine);
 		
 		breakRoom.setVendingMachines(vendingMachines);
+		
+		Map<Class<?>, QueryResponseTypeFactory> factories = new HashMap<>();
+		factories.put(Map.class, new QueryResponseTypeFactoryMapImpl());
+		
+		Map<Class<?>, QueryResponseTypeReader> readers = new HashMap<>();
+		readers.put(Map.class, new QueryResponseTypeReaderMapImpl());
+
+		Map<Class<?>, QueryResponseTypeWriter> writers = new HashMap<>();
+		writers.put(Map.class, new QueryResponseTypeWriterMapImpl());
+		
+		QueryResponseTypeManagerRegistry.getInstance().setDefaultQueryResponseTypeFactory(new QueryResponseTypeFactoryReflectionImpl());
+		QueryResponseTypeManagerRegistry.getInstance().setDefaultQueryResponseTypeReader(new QueryResponseTypeReaderBeanImpl());
+		QueryResponseTypeManagerRegistry.getInstance().setDefaultQueryResponseTypeWriter(new QueryResponseTypeWriterBeanImpl());
+		
+		QueryResponseTypeManagerRegistry.getInstance().setTypeFactories(factories);
+		QueryResponseTypeManagerRegistry.getInstance().setTypeReaders(readers);
+		QueryResponseTypeManagerRegistry.getInstance().setTypeWriters(writers);
 	}
 	
 	private Query buildFullyInflatedBreakRoomQuery() {
@@ -81,7 +108,7 @@ public class ResponseDocumentTest {
 	
 	@Test
 	public void testBean() throws IOException {
-		BreakRoom responseBreakRoom = new QueryResponseBeanDataProcessor<BreakRoom>(buildPartiallyInflatedBreakRoomQuery()).process(breakRoom);
+		BreakRoom responseBreakRoom = new QueryResponseProcessor(buildPartiallyInflatedBreakRoomQuery()).process(breakRoom, BreakRoom.class);
 		
 		assertNotNull(responseBreakRoom.getId());
 		assertNull(responseBreakRoom.getName());
@@ -94,7 +121,7 @@ public class ResponseDocumentTest {
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void testMap() throws IOException {	
-		Map<String, Object> data = new QueryResponseMapDataProcessor(buildFullyInflatedBreakRoomQuery()).process(breakRoom);
+		Map<String, Object> data = new QueryResponseProcessor(buildFullyInflatedBreakRoomQuery()).process(breakRoom, Map.class);
 		
 		assertNotNull(data.get("id"));
 		assertNotNull(data.get("name"));
