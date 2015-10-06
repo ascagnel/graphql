@@ -1,7 +1,6 @@
 package com.dibs.graphql.response.processor.impl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.reflect.Array;
 
 import com.dibs.graphql.data.request.Query;
 import com.dibs.graphql.response.manager.QueryResponseTypeFactory;
@@ -35,7 +34,6 @@ public class QueryResponseProcessor implements QueryResponseDataProcessor {
 			for (Query subQuery : query.getSubQueries()) {
 				String subQueryName = subQuery.getName();
 				
-				
 				Object subQueryBean = typeReader.readProperty(bean, subQueryName);
 				
 				if (subQueryBean == null || subQuery.getSubQueries() == null) {
@@ -43,14 +41,23 @@ public class QueryResponseProcessor implements QueryResponseDataProcessor {
 					continue;
 				}
 				
-				if (Iterable.class.isAssignableFrom(subQueryBean.getClass())) {
-					List<T> subQueryValues = new ArrayList<>();
+				if (subQueryBean instanceof Array) {
+					Object[] newBeanArray = (Object[]) typeFactory.initializeType(responseType, subQueryBean.getClass());
+					Object[] subQueryBeanArray = (Object[]) subQueryBean;
+					
+					for (int i = 0; i < subQueryBeanArray.length; i++) {
+						newBeanArray[i] = (T) process(subQuery, subQueryBeanArray[i], responseType);
+					}
+					
+					typeWriter.writeProperty(response, subQueryName, newBeanArray);
+				} else if (Iterable.class.isAssignableFrom(subQueryBean.getClass())) {
+					Object iterableHolder = typeFactory.initializeType(responseType, subQueryBean.getClass());
 
 					for (Object entry : (Iterable<?>) subQueryBean) {
-						subQueryValues.add((T) process(subQuery, entry, responseType));
+						typeWriter.addPropertyToIterable(iterableHolder, subQueryName, (T) process(subQuery, entry, responseType));
 					}
 
-					typeWriter.writeProperty(response, subQueryName, subQueryValues);
+					typeWriter.writeProperty(response, subQueryName, iterableHolder);
 				} else {
 					T subQueryValues = process(subQuery, subQueryBean, responseType);
 					typeWriter.writeProperty(response, subQueryName, subQueryValues);

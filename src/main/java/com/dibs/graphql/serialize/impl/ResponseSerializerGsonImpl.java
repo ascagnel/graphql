@@ -28,5 +28,6 @@ public class ResponseSerializerGsonImpl implements Serializer<Response>{
 	public void serialize(OutputStream stream, Response response) throws IOException {
 		OutputStreamWriter streamWriter = new OutputStreamWriter(stream);
 		gson.toJson(response, streamWriter);
+		streamWriter.flush();
 	}
 }

@@ -2,6 +2,7 @@ package com.dibs.graphql.response;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -22,14 +23,20 @@ import com.dibs.graphql.response.manager.QueryResponseTypeFactory;
 import com.dibs.graphql.response.manager.QueryResponseTypeManagerRegistry;
 import com.dibs.graphql.response.manager.QueryResponseTypeReader;
 import com.dibs.graphql.response.manager.QueryResponseTypeWriter;
+import com.dibs.graphql.response.manager.impl.QueryResponseTypeFactoryGsonImpl;
 import com.dibs.graphql.response.manager.impl.QueryResponseTypeFactoryMapImpl;
 import com.dibs.graphql.response.manager.impl.QueryResponseTypeFactoryReflectionImpl;
 import com.dibs.graphql.response.manager.impl.QueryResponseTypeReaderBeanImpl;
+import com.dibs.graphql.response.manager.impl.QueryResponseTypeReaderGsonImpl;
 import com.dibs.graphql.response.manager.impl.QueryResponseTypeReaderMapImpl;
 import com.dibs.graphql.response.manager.impl.QueryResponseTypeWriterBeanImpl;
+import com.dibs.graphql.response.manager.impl.QueryResponseTypeWriterGsonImpl;
 import com.dibs.graphql.response.manager.impl.QueryResponseTypeWriterMapImpl;
 import com.dibs.graphql.response.processor.impl.QueryResponseProcessor;
 import com.dibs.graphql.serialize.impl.ResponseSerializerGsonImpl;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 public class ResponseDocumentTest {
 
@@ -54,13 +61,17 @@ public class ResponseDocumentTest {
 		
 		Map<Class<?>, QueryResponseTypeFactory> factories = new HashMap<>();
 		factories.put(Map.class, new QueryResponseTypeFactoryMapImpl());
-		
+		factories.put(JsonElement.class, new QueryResponseTypeFactoryGsonImpl());
+
 		Map<Class<?>, QueryResponseTypeReader> readers = new HashMap<>();
 		readers.put(Map.class, new QueryResponseTypeReaderMapImpl());
+		readers.put(JsonElement.class, new QueryResponseTypeReaderGsonImpl());
+		readers.put(JsonObject.class, new QueryResponseTypeReaderGsonImpl());
 
 		Map<Class<?>, QueryResponseTypeWriter> writers = new HashMap<>();
 		writers.put(Map.class, new QueryResponseTypeWriterMapImpl());
-		
+		writers.put(JsonElement.class, new QueryResponseTypeWriterGsonImpl());
+
 		QueryResponseTypeManagerRegistry.getInstance().setDefaultQueryResponseTypeFactory(new QueryResponseTypeFactoryReflectionImpl());
 		QueryResponseTypeManagerRegistry.getInstance().setDefaultQueryResponseTypeReader(new QueryResponseTypeReaderBeanImpl());
 		QueryResponseTypeManagerRegistry.getInstance().setDefaultQueryResponseTypeWriter(new QueryResponseTypeWriterBeanImpl());
@@ -118,7 +129,7 @@ public class ResponseDocumentTest {
 	}
 	
 	
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testMap() throws IOException {	
 		Map<String, Object> data = new QueryResponseProcessor(buildFullyInflatedBreakRoomQuery()).process(breakRoom, Map.class);
@@ -126,12 +137,43 @@ public class ResponseDocumentTest {
 		assertNotNull(data.get("id"));
 		assertNotNull(data.get("name"));
 		assertNotNull(data.get("vendingMachines"));
-		assertNotNull(((Map)((List)data.get("vendingMachines")).get(0)).get("id"));
+		assertNotNull(((Map<?,?>)((List<?>)data.get("vendingMachines")).get(0)).get("id"));
 		
 		Response response = new Response();
 		response.setData(data);
 		
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		ResponseSerializerGsonImpl serializer = new ResponseSerializerGsonImpl();
-		serializer.serialize(new ByteArrayOutputStream(), response);
+		serializer.serialize(outputStream, response);
+				
+		assertNotNull(outputStream);
+		assertTrue(outputStream.size() > 0);
+	}
+	
+	@Test
+	public void testBeanToJsonElement() throws IOException {
+		JsonElement responseBreakRoomJson = new QueryResponseProcessor(buildPartiallyInflatedBreakRoomQuery()).process(breakRoom, JsonElement.class);
+		
+		JsonObject responseJsonObject = responseBreakRoomJson.getAsJsonObject();
+		
+		assertNotNull(responseJsonObject.get("id"));
+		assertNull(responseJsonObject.get("name"));
+		assertNotNull(responseJsonObject.get("vendingMachines"));
+		assertNotNull(responseJsonObject.get("vendingMachines").getAsJsonArray().get(0).getAsJsonObject().get("id"));
+		assertNull(responseJsonObject.get("vendingMachines").getAsJsonArray().get(0).getAsJsonObject().get("merchandiseCount"));
+	}
+	
+	@Test
+	public void testJsonElementToJsonElement() throws IOException {
+		JsonElement breakRoomJson = new Gson().toJsonTree(breakRoom);
+		JsonElement responseBreakRoomJson = new QueryResponseProcessor(buildPartiallyInflatedBreakRoomQuery()).process(breakRoomJson, JsonElement.class);
+		
+		JsonObject responseJsonObject = responseBreakRoomJson.getAsJsonObject();
+		
+		assertNotNull(responseJsonObject.get("id"));
+		assertNull(responseJsonObject.get("name"));
+		assertNotNull(responseJsonObject.get("vendingMachines"));
+		assertNotNull(responseJsonObject.get("vendingMachines").getAsJsonArray().get(0).getAsJsonObject().get("id"));
+		assertNull(responseJsonObject.get("vendingMachines").getAsJsonArray().get(0).getAsJsonObject().get("merchandiseCount"));
 	}
 }
