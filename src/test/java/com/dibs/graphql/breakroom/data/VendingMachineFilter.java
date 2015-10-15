@@ -2,7 +2,7 @@ package com.dibs.graphql.breakroom.data;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 
-import com.dibs.graphql.data.QueryTree;
+import com.dibs.graphql.data.request.QueryTree;
 
 public class VendingMachineFilter {
 

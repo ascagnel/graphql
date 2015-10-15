@@ -1,43 +1,62 @@
 package com.dibs.graphql.deserialize.parser.impl;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.dibs.graphql.data.Arguments;
-import com.dibs.graphql.data.deserialize.TokenData;
+import com.dibs.graphql.data.request.Arguments;
+import com.dibs.graphql.deserialize.DeserializationException;
 import com.dibs.graphql.deserialize.TypeResolver;
-import com.dibs.graphql.deserialize.parser.StreamUtil;
+import com.dibs.graphql.deserialize.data.TokenData;
+import com.dibs.graphql.deserialize.parser.StreamReader;
+import com.dibs.graphql.deserialize.parser.TokenParser;
 import com.dibs.graphql.deserialize.parser.TokenUtil;
-import com.dibs.graphql.util.Util;
+import com.dibs.graphql.deserialize.parser.validation.QueryValidationUtil;
 
-public class ArgumentParser {
+public class ArgumentParser implements TokenParser<Arguments>{
 
 	private static final Log LOG = LogFactory.getLog(ArgumentParser.class);
 
-	public Arguments parseArguments(Reader reader) throws IOException {
+	private StreamReader streamReader;
+	
+	public ArgumentParser() {
+	}
+	
+	public ArgumentParser(StreamReader streamReader) {
+		this.streamReader = streamReader;
+	}
+
+	public StreamReader getStreamReader() {
+		return streamReader;
+	}
+	
+	public Arguments next() throws IOException, DeserializationException {
+		if (streamReader == null) {
+			throw new RuntimeException("A StreamReader must be set to parse arguments");
+		}
+		
 		Arguments arguments = new Arguments();
 		
 		TokenData argumentKeyData = null;
 		TokenData argumentValueData = null;
 		
 		for (boolean reachedArgumentTerminator = false; !reachedArgumentTerminator; reachedArgumentTerminator = TokenUtil.isAttributeTerminator(argumentValueData)) {
-			argumentKeyData = StreamUtil.readUntilPunctuator(reader);
-			Util.assertContains(TokenUtil.ARGUMENT_KEY_TERMINATORS, argumentKeyData.getType());
+			argumentKeyData = streamReader.readUntilPunctuator();
+			
+			QueryValidationUtil.validatePunctuator(TokenUtil.ARGUMENT_KEY_TERMINATORS, argumentKeyData.getType(), streamReader);
 			
 			Object typedArgumentValue = null;
 			
-			argumentValueData = StreamUtil.readUntilPunctuator(reader);
+			argumentValueData = streamReader.readUntilPunctuator();
 			if (TokenUtil.isArrayStart(argumentValueData)) {
 				List<TokenData> arrayElements = new ArrayList<>();
 				
-				argumentValueData = StreamUtil.readUntilPunctuator(reader);
+				argumentValueData = streamReader.readUntilPunctuator();
 				
-				for (boolean isArrayEnd = false; !isArrayEnd; isArrayEnd = TokenUtil.isArrayTerminator(argumentValueData), argumentValueData = StreamUtil.readUntilPunctuator(reader)) {					
+				for (boolean isArrayEnd = false; !isArrayEnd; isArrayEnd = TokenUtil.isArrayTerminator(argumentValueData), argumentValueData = streamReader.readUntilPunctuator()) {					
 					arrayElements.add(argumentValueData);
 				}
 				
@@ -46,10 +65,10 @@ public class ArgumentParser {
 				typedArgumentValue = TypeResolver.rawDataToTypedValue(argumentValueData);
 			}
 			
-			Util.assertContains(TokenUtil.ARGUMENT_VALUE_TERMINATORS, argumentValueData.getType());
+			QueryValidationUtil.validatePunctuator(TokenUtil.ARGUMENT_VALUE_TERMINATORS, argumentValueData.getType(), streamReader);
 			
 			// Format the input to remove any leading/trailing whitespace
-			String argumentKey = StreamUtil.nullIfEmpty(new String(argumentKeyData.getValue()));
+			String argumentKey = StreamReader.nullIfEmpty(new String(argumentKeyData.getValue()));
 						
 			// Save the filter
 			arguments.put(argumentKey, typedArgumentValue);

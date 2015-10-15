@@ -1,4 +1,4 @@
-package com.dibs.graphql.data;
+package com.dibs.graphql.data.request;
 
 import java.util.ArrayList;
 import java.util.List;

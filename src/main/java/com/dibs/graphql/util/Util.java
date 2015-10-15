@@ -15,10 +15,4 @@ public class Util {
 	    
 	    return set;
 	}
-	
-	public static <D> void assertContains(Set<D> expected, D actual) {
-		if (!expected.contains(actual)) {
-			throw new RuntimeException("Invalid value [" + actual +"]. Expected one of: " + expected);
-		}
-	}
 }
