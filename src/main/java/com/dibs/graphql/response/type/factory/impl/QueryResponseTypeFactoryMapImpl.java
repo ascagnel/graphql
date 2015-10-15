@@ -1,10 +1,10 @@
-package com.dibs.graphql.response.manager.impl;
+package com.dibs.graphql.response.type.factory.impl;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import com.dibs.graphql.response.manager.QueryResponseTypeFactory;
+import com.dibs.graphql.response.type.factory.QueryResponseTypeFactory;
 
 public class QueryResponseTypeFactoryMapImpl implements QueryResponseTypeFactory {
 

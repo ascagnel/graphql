@@ -1,11 +1,11 @@
-package com.dibs.graphql.response.manager.impl;
+package com.dibs.graphql.response.type.writer.impl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
 import org.apache.commons.beanutils.PropertyUtils;
 
-import com.dibs.graphql.response.manager.QueryResponseTypeWriter;
+import com.dibs.graphql.response.type.writer.QueryResponseTypeWriter;
 
 public class QueryResponseTypeWriterBeanImpl implements QueryResponseTypeWriter {
 	

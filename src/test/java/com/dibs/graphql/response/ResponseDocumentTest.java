@@ -7,7 +7,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,19 +18,6 @@ import com.dibs.graphql.breakroom.data.VendingMachine;
 import com.dibs.graphql.data.request.Query;
 import com.dibs.graphql.data.request.QueryBuilder;
 import com.dibs.graphql.data.response.Response;
-import com.dibs.graphql.response.manager.QueryResponseTypeFactory;
-import com.dibs.graphql.response.manager.QueryResponseTypeManagerRegistry;
-import com.dibs.graphql.response.manager.QueryResponseTypeReader;
-import com.dibs.graphql.response.manager.QueryResponseTypeWriter;
-import com.dibs.graphql.response.manager.impl.QueryResponseTypeFactoryGsonImpl;
-import com.dibs.graphql.response.manager.impl.QueryResponseTypeFactoryMapImpl;
-import com.dibs.graphql.response.manager.impl.QueryResponseTypeFactoryReflectionImpl;
-import com.dibs.graphql.response.manager.impl.QueryResponseTypeReaderBeanImpl;
-import com.dibs.graphql.response.manager.impl.QueryResponseTypeReaderGsonImpl;
-import com.dibs.graphql.response.manager.impl.QueryResponseTypeReaderMapImpl;
-import com.dibs.graphql.response.manager.impl.QueryResponseTypeWriterBeanImpl;
-import com.dibs.graphql.response.manager.impl.QueryResponseTypeWriterGsonImpl;
-import com.dibs.graphql.response.manager.impl.QueryResponseTypeWriterMapImpl;
 import com.dibs.graphql.response.processor.impl.QueryResponseProcessor;
 import com.dibs.graphql.serialize.impl.ResponseSerializerGsonImpl;
 import com.google.gson.Gson;
@@ -58,27 +44,6 @@ public class ResponseDocumentTest {
 		vendingMachines.add(vendingMachine);
 		
 		breakRoom.setVendingMachines(vendingMachines);
-		
-		Map<Class<?>, QueryResponseTypeFactory> factories = new HashMap<>();
-		factories.put(Map.class, new QueryResponseTypeFactoryMapImpl());
-		factories.put(JsonElement.class, new QueryResponseTypeFactoryGsonImpl());
-
-		Map<Class<?>, QueryResponseTypeReader> readers = new HashMap<>();
-		readers.put(Map.class, new QueryResponseTypeReaderMapImpl());
-		readers.put(JsonElement.class, new QueryResponseTypeReaderGsonImpl());
-		readers.put(JsonObject.class, new QueryResponseTypeReaderGsonImpl());
-
-		Map<Class<?>, QueryResponseTypeWriter> writers = new HashMap<>();
-		writers.put(Map.class, new QueryResponseTypeWriterMapImpl());
-		writers.put(JsonElement.class, new QueryResponseTypeWriterGsonImpl());
-
-		QueryResponseTypeManagerRegistry.getInstance().setDefaultQueryResponseTypeFactory(new QueryResponseTypeFactoryReflectionImpl());
-		QueryResponseTypeManagerRegistry.getInstance().setDefaultQueryResponseTypeReader(new QueryResponseTypeReaderBeanImpl());
-		QueryResponseTypeManagerRegistry.getInstance().setDefaultQueryResponseTypeWriter(new QueryResponseTypeWriterBeanImpl());
-		
-		QueryResponseTypeManagerRegistry.getInstance().setTypeFactories(factories);
-		QueryResponseTypeManagerRegistry.getInstance().setTypeReaders(readers);
-		QueryResponseTypeManagerRegistry.getInstance().setTypeWriters(writers);
 	}
 	
 	private Query buildFullyInflatedBreakRoomQuery() {

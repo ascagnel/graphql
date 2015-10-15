@@ -1,13 +1,13 @@
 package com.dibs.graphql.response.processor.impl;
 
-import java.lang.reflect.Array;
-
 import com.dibs.graphql.data.request.Query;
-import com.dibs.graphql.response.manager.QueryResponseTypeFactory;
-import com.dibs.graphql.response.manager.QueryResponseTypeManagerRegistry;
-import com.dibs.graphql.response.manager.QueryResponseTypeReader;
-import com.dibs.graphql.response.manager.QueryResponseTypeWriter;
 import com.dibs.graphql.response.processor.QueryResponseDataProcessor;
+import com.dibs.graphql.response.type.factory.QueryResponseTypeFactory;
+import com.dibs.graphql.response.type.factory.QueryResponseTypeFactoryRegistry;
+import com.dibs.graphql.response.type.reader.QueryResponseTypeReader;
+import com.dibs.graphql.response.type.reader.QueryResponseTypeReaderRegistry;
+import com.dibs.graphql.response.type.writer.QueryResponseTypeWriter;
+import com.dibs.graphql.response.type.writer.QueryResponseTypeWriterRegistry;
 
 public class QueryResponseProcessor implements QueryResponseDataProcessor {
 	
@@ -24,9 +24,9 @@ public class QueryResponseProcessor implements QueryResponseDataProcessor {
 	
 	@SuppressWarnings("unchecked")
 	private <T> T process(Query query, Object bean, Class<?> responseType) {
-		QueryResponseTypeFactory typeFactory = QueryResponseTypeManagerRegistry.getInstance().getTypeFactory(responseType);
-		QueryResponseTypeReader typeReader = QueryResponseTypeManagerRegistry.getInstance().getTypeReader(bean.getClass());
-		QueryResponseTypeWriter typeWriter = QueryResponseTypeManagerRegistry.getInstance().getTypeWriter(responseType);
+		QueryResponseTypeFactory typeFactory = QueryResponseTypeFactoryRegistry.getInstance().getTypeManager(responseType);
+		QueryResponseTypeReader typeReader = QueryResponseTypeReaderRegistry.getInstance().getTypeManager(bean.getClass());
+		QueryResponseTypeWriter typeWriter = QueryResponseTypeWriterRegistry.getInstance().getTypeManager(responseType);
 
 		T response = (T) typeFactory.initializeType(responseType, bean.getClass());
 		
@@ -41,7 +41,7 @@ public class QueryResponseProcessor implements QueryResponseDataProcessor {
 					continue;
 				}
 				
-				if (subQueryBean instanceof Array) {
+				if (subQueryBean.getClass().isArray()) {
 					Object[] newBeanArray = (Object[]) typeFactory.initializeType(responseType, subQueryBean.getClass());
 					Object[] subQueryBeanArray = (Object[]) subQueryBean;
 					

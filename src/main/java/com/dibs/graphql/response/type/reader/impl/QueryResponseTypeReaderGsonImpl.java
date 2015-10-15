@@ -1,6 +1,6 @@
-package com.dibs.graphql.response.manager.impl;
+package com.dibs.graphql.response.type.reader.impl;
 
-import com.dibs.graphql.response.manager.QueryResponseTypeReader;
+import com.dibs.graphql.response.type.reader.QueryResponseTypeReader;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 

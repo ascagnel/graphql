@@ -1,9 +1,9 @@
-package com.dibs.graphql.response.manager.impl;
+package com.dibs.graphql.response.type.writer.impl;
 
 import java.util.Collection;
 import java.util.Map;
 
-import com.dibs.graphql.response.manager.QueryResponseTypeWriter;
+import com.dibs.graphql.response.type.writer.QueryResponseTypeWriter;
 
 public class QueryResponseTypeWriterMapImpl implements QueryResponseTypeWriter {
 

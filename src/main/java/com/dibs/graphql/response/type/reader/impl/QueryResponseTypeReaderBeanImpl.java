@@ -1,10 +1,10 @@
-package com.dibs.graphql.response.manager.impl;
+package com.dibs.graphql.response.type.reader.impl;
 
 import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.beanutils.PropertyUtils;
 
-import com.dibs.graphql.response.manager.QueryResponseTypeReader;
+import com.dibs.graphql.response.type.reader.QueryResponseTypeReader;
 
 public class QueryResponseTypeReaderBeanImpl implements QueryResponseTypeReader {
 

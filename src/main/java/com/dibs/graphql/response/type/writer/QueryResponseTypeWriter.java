@@ -1,4 +1,4 @@
-package com.dibs.graphql.response.manager;
+package com.dibs.graphql.response.type.writer;
 
 public interface QueryResponseTypeWriter {
 

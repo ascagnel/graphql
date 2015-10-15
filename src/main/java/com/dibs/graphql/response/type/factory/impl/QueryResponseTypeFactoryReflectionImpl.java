@@ -1,6 +1,7 @@
-package com.dibs.graphql.response.manager.impl;
+package com.dibs.graphql.response.type.factory.impl;
 
-import com.dibs.graphql.response.manager.QueryResponseTypeFactory;
+import com.dibs.graphql.response.type.factory.QueryResponseTypeFactory;
+
 
 public class QueryResponseTypeFactoryReflectionImpl implements QueryResponseTypeFactory {
 
